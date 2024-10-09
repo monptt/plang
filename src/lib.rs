@@ -1,4 +1,5 @@
 use wasm_bindgen::prelude::*;
+mod interpreter;
 
 #[wasm_bindgen]
 extern {
@@ -8,4 +9,10 @@ extern {
 #[wasm_bindgen]
 pub fn greet(name: &str) {
     alert(&format!("Hello, {}!", name));
+}
+
+
+#[wasm_bindgen]
+pub fn interpret(code: &str) -> String {
+    return interpreter::interpret(code);
 }

@@ -1,5 +1,6 @@
-C:\projects\plang\target\wasm32-unknown-unknown\release\deps\plang.wasm: src\lib.rs
+C:\Projects\plang\target\wasm32-unknown-unknown\release\deps\plang.wasm: src\lib.rs src\interpreter.rs
 
-C:\projects\plang\target\wasm32-unknown-unknown\release\deps\plang.d: src\lib.rs
+C:\Projects\plang\target\wasm32-unknown-unknown\release\deps\plang.d: src\lib.rs src\interpreter.rs
 
 src\lib.rs:
+src\interpreter.rs:
