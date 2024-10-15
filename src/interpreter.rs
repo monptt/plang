@@ -26,6 +26,10 @@ pub fn interpret(code: &str) -> String {
 
             output.push_str(&String::from(format!("{}={}", variable_name, value)));
         }
+        else{
+            // 何も当てはまらない場合はとりあえずそのまま出す
+            output.push_str(line);
+        }
 
         output.push_str("\n");
     }
