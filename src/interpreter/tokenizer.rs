@@ -2,16 +2,13 @@ enum Token{
 
 }
 
-pub struct TokenList{
-    tokens : Vec<Token>
+pub struct TokenList<'a>{
+    pub tokens : Vec<&'a str>
 }
 
-impl TokenList{
-    pub fn new(input : Vec<char>) -> TokenList{
-        let tokens = Vec::<Token>::new();
-        for _c in &input{
-
-        }
-        return TokenList{tokens : tokens};
+impl TokenList<'_>{
+    pub fn new(line : &str) -> TokenList{
+        let words: Vec<_> = line.split(" ").collect();
+        return TokenList{tokens : words};
     }
 }

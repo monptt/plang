@@ -1,6 +1,5 @@
 mod interpreter;
 
 fn main(){
-    println!("Hello World!");
-    println!("{}", interpreter::interpret("hello\nworld"));
+    println!("{}", interpreter::interpret("let x = 1\ny = x - 3"));
 }
