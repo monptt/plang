@@ -1,6 +1,6 @@
 use wasm_bindgen::prelude::*;
 mod interpreter;
-
+mod object;
 
 #[wasm_bindgen]
 extern {
