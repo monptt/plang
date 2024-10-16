@@ -4,7 +4,7 @@ use super::object::ObjectTrait;
 
 #[derive(Copy, Clone)]
 pub struct Number{
-    value: i32
+    pub value: i32
 }
 
 impl Number{

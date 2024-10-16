@@ -1,6 +1,6 @@
 mod interpreter;
-mod object;
+pub mod object;
 
 fn main(){
-    println!("{}", interpreter::interpreter::interpret("let x = 1\neval x"));
+    println!("{}", interpreter::interpreter::interpret("let x = 1 + 2\neval x"));
 }
