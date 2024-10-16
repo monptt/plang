@@ -19,14 +19,14 @@ pub fn interpret(code: &str) -> String {
             let value: number::Number = number::Number::new(tokens[3]);
             variables.insert(variable_name, value);
 
-            output.push_str(&String::from(format!("{}={}", variable_name, value.to_string())));
+            output.push_str(&String::from(format!("{}={}", variable_name, value)));
         }
         else if tokens[0] == "eval"{
             // 値を評価する
             let variable_name = tokens[1];
             let value: &number::Number = variables.get(variable_name).unwrap();
 
-            output.push_str(&String::from(format!("{}={}", variable_name, value.to_string())));
+            output.push_str(&String::from(format!("{}={}", variable_name, value)));
         }
         else{
             // 何も当てはまらない場合はとりあえずそのまま出す
