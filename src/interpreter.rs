@@ -1,4 +1,5 @@
 mod tokenizer;
+
 use std::collections::HashMap;
 
 pub fn interpret(code: &str) -> String {
