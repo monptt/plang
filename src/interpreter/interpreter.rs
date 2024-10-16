@@ -1,4 +1,4 @@
-mod tokenizer;
+use super::tokenizer;
 
 use std::collections::HashMap;
 use crate::object::number;

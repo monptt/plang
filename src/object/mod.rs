@@ -1,3 +1,3 @@
-mod object;
-mod set;
+pub mod object;
+pub mod set;
 pub mod number;

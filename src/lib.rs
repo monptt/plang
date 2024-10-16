@@ -1,6 +1,7 @@
 use wasm_bindgen::prelude::*;
 mod interpreter;
 
+
 #[wasm_bindgen]
 extern {
     pub fn alert(s: &str);
@@ -14,5 +15,5 @@ pub fn greet(name: &str) {
 
 #[wasm_bindgen]
 pub fn interpret(code: &str) -> String {
-    return interpreter::interpret(code);
+    return interpreter::interpreter::interpret(code);
 }
