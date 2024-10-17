@@ -1,7 +1,7 @@
 use super::tokenizer;
 
 use std::collections::HashMap;
-use crate::object::number;
+use crate::object::number::number;
 
 pub fn interpret(code: &str) -> String {
     let mut output = String::from("");

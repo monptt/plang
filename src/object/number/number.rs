@@ -1,7 +1,5 @@
 use std::fmt;
 
-use super::object::ObjectTrait;
-
 #[derive(Copy, Clone)]
 pub struct Number{
     pub value: i32
@@ -33,8 +31,4 @@ impl fmt::Display for Number {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         return write!(f, "{}", self.value);
     }
-}
-
-impl ObjectTrait for Number{
-
 }
