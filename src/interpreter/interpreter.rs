@@ -1,7 +1,7 @@
 use super::tokenizer;
 
 use std::collections::HashMap;
-use crate::object::number::number;
+use crate::object::number::value;
 use crate::object::number::integer::Integer;
 
 pub fn interpret(code: &str) -> String {
