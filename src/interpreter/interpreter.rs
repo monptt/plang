@@ -2,12 +2,13 @@ use super::tokenizer;
 
 use std::collections::HashMap;
 use crate::object::number::number;
+use crate::object::number::integer::Integer;
 
 pub fn interpret(code: &str) -> String {
     let mut output = String::from("");
     
     // 宣言された変数を格納するハッシュマップ
-    let mut variables: HashMap<&str, number::Number> = std::collections::HashMap::new();
+    let mut variables: HashMap<&str, Integer> = std::collections::HashMap::new();
 
     for line in code.lines(){
         // ここで行ごとに処理する
@@ -16,7 +17,7 @@ pub fn interpret(code: &str) -> String {
         if tokens[0] == "let" && tokens[2] == "="{
             // 変数宣言
             let variable_name = tokens[1];
-            let value: number::Number = evaluate(tokens[3..].to_vec(), &variables);
+            let value: Integer = evaluate(tokens[3..].to_vec(), &variables);
             variables.insert(variable_name, value);
 
 
@@ -28,7 +29,7 @@ pub fn interpret(code: &str) -> String {
         else if tokens[0] == "eval"{
             // 値を評価する
             let variable_name = tokens[1];
-            let value: &number::Number = &evaluate(tokens[1..].to_vec(), &variables);
+            let value: &Integer = &evaluate(tokens[1..].to_vec(), &variables);
 
             output.push_str(&String::from(format!("{}={}", variable_name, value)));
         }
@@ -42,8 +43,8 @@ pub fn interpret(code: &str) -> String {
     return output;
 }
 
-fn evaluate(tokens: Vec<&str>, variables: &HashMap<&str, number::Number>) -> number::Number{
-    let mut ret_value: number::Number = number::Number{value: 0};
+fn evaluate(tokens: Vec<&str>, variables: &HashMap<&str, Integer>) -> Integer{
+    let mut ret_value: Integer = Integer{value: 0};
 
     let mut i = 0;
     while i < tokens.len(){
@@ -51,26 +52,26 @@ fn evaluate(tokens: Vec<&str>, variables: &HashMap<&str, number::Number>) -> num
 
         if token == "+" {
             i += 1;
-            let num = token_to_number(tokens[i], variables);
-            ret_value = number::Number::add(ret_value, num);
+            let num = token_to_integer(tokens[i], variables);
+            ret_value = Integer::add(ret_value, num);
         }
         else if token == "-" {
             i += 1;
-            let num = token_to_number(tokens[i], variables);
-            ret_value = number::Number::sub(ret_value, num);
+            let num = token_to_integer(tokens[i], variables);
+            ret_value = Integer::sub(ret_value, num);
         }
         else if token == "*" {
             i += 1;
-            let num = token_to_number(tokens[i], variables);
-            ret_value = number::Number::mul(ret_value, num);
+            let num = token_to_integer(tokens[i], variables);
+            ret_value = Integer::mul(ret_value, num);
         }
         else if token == "/" {
             i += 1;
-            let num = token_to_number(tokens[i], variables);
-            ret_value = number::Number::div(ret_value, num);
+            let num = token_to_integer(tokens[i], variables);
+            ret_value = Integer::div(ret_value, num);
         }
         else{
-            ret_value = token_to_number(token, variables);
+            ret_value = token_to_integer(token, variables);
         }
 
         i = i + 1;
@@ -78,10 +79,10 @@ fn evaluate(tokens: Vec<&str>, variables: &HashMap<&str, number::Number>) -> num
     return ret_value;
 }
 
-fn token_to_number(token: &str, variables: &HashMap<&str, number::Number>) -> number::Number{
+fn token_to_integer(token: &str, variables: &HashMap<&str, Integer>) -> Integer{
     if variables.contains_key(token){
         return *variables.get(token).unwrap();
     }else{
-        return number::Number::new(token);
+        return Integer::new(token);
     }
 }
