@@ -1,4 +1,4 @@
-use super::tokenizer;
+use super::tokenizer::{self, Token};
 
 use std::collections::HashMap;
 use std::rc::Rc;
@@ -11,28 +11,28 @@ pub fn interpret(code: &str) -> String {
     let mut output = String::from("");
     
     // 宣言された変数を格納するハッシュマップ
-    let mut variables: HashMap<&str, Rc<Integer>> = std::collections::HashMap::new();
+    let mut variables: HashMap<String, Rc<Integer>> = std::collections::HashMap::new();
 
     for line in code.lines(){
         // ここで行ごとに処理する
-        let tokens = tokenizer::TokenList::new(line).tokens;
+        let token_list = Box::new(tokenizer::TokenList::new(line));
 
-        if tokens[0] == "let" && tokens[2] == "="{
+        if token_list.get_token(0).get_word() == "let" && token_list.get_token(2).get_word() == "="{
             // 変数宣言
-            let variable_name = tokens[1];
-            let value: Integer = evaluate(tokens[3..].to_vec(), &variables);
-            variables.insert(variable_name, Rc::new(value));
+            let variable_name = &*token_list.get_token(1).get_word().clone();
+            let value: Integer = evaluate(token_list.get_vec()[3..].to_vec(), &variables);
+            variables.insert(variable_name.to_string(), Rc::new(value));
 
 
             output.push_str(&String::from(format!("{}=", variable_name)));
-            for token in tokens[3..].to_vec() {
+            for token in token_list.get_vec()[3..].to_vec() {
                 output.push_str(&String::from(format!("{}", token)));
             }
         }
-        else if tokens[0] == "eval"{
+        else if token_list.get_token(0).get_word() == "eval"{
             // 値を評価する
-            let variable_name = tokens[1];
-            let value: &Integer = &evaluate(tokens[1..].to_vec(), &variables);
+            let variable_name = token_list.get_token(1).get_word();
+            let value: &Integer = &evaluate(token_list.get_vec()[1..].to_vec(), &variables);
 
             output.push_str(&String::from(format!("{}={}", variable_name, value)));
         }
@@ -46,35 +46,35 @@ pub fn interpret(code: &str) -> String {
     return output;
 }
 
-fn evaluate(tokens: Vec<&str>, variables: &HashMap<&str, Rc<Integer>>) -> Integer{
+fn evaluate(tokens: Vec<Token>, variables: &HashMap<String, Rc<Integer>>) -> Integer{
     let mut ret_value: Integer = Integer{value: 0};
 
     let mut i = 0;
     while i < tokens.len(){
-        let token = tokens[i];
+        let token = &tokens[i];
 
-        if token == "+" {
+        if token.get_word() == "+" {
             i += 1;
-            let num = token_to_integer(tokens[i], variables);
+            let num = token_to_integer(tokens[i].get_word(), variables);
             ret_value = Integer::add(ret_value, num);
         }
-        else if token == "-" {
+        else if token.get_word() == "-" {
             i += 1;
-            let num = token_to_integer(tokens[i], variables);
+            let num = token_to_integer(tokens[i].get_word(), variables);
             ret_value = Integer::sub(ret_value, num);
         }
-        else if token == "*" {
+        else if token.get_word() == "*" {
             i += 1;
-            let num = token_to_integer(tokens[i], variables);
+            let num = token_to_integer(tokens[i].get_word(), variables);
             ret_value = Integer::mul(ret_value, num);
         }
-        else if token == "/" {
+        else if token.get_word() == "/" {
             i += 1;
-            let num = token_to_integer(tokens[i], variables);
+            let num = token_to_integer(tokens[i].get_word(), variables);
             ret_value = Integer::div(ret_value, num);
         }
         else{
-            ret_value = token_to_integer(token, variables);
+            ret_value = token_to_integer(token.get_word(), variables);
         }
 
         i = i + 1;
@@ -82,7 +82,7 @@ fn evaluate(tokens: Vec<&str>, variables: &HashMap<&str, Rc<Integer>>) -> Intege
     return ret_value;
 }
 
-fn token_to_integer(token: &str, variables: &HashMap<&str, Rc<Integer>>) -> Integer{
+fn token_to_integer(token: &str, variables: &HashMap<String, Rc<Integer>>) -> Integer{
     if variables.contains_key(token){
         return **variables.get(token).unwrap();
     }else{

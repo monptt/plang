@@ -6,10 +6,10 @@ trait Sub {
     fn sub();
 }
 
-trait mul {
+trait Mul {
     fn mul();
 }
 
-trait div {
+trait Div {
     fn div();
 }

@@ -1,3 +1,6 @@
+use std::fmt;
+
+#[derive(Clone)]
 pub struct Token{
     word: String
 }
@@ -7,18 +10,40 @@ impl Token {
         return Token{word: word};
     }
 
-    fn get_word(&self) -> &String{
+    pub fn get_word(&self) -> &String{
         return &self.word;
     }
 }
 
-pub struct TokenList<'a>{
-    pub tokens : Vec<&'a str>
+impl fmt::Display for Token {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        return write!(f, "{}", self.word);
+    }
 }
 
-impl TokenList<'_>{
+pub struct TokenList{
+    tokens : Vec<Token>
+}
+
+impl TokenList{
     pub fn new(line : &str) -> TokenList{
+        let mut token_list = TokenList{tokens: Vec::new()};
+
         let words: Vec<_> = line.split(" ").collect();
-        return TokenList{tokens : words};
+
+        for word in words{
+            let token = Token::new(word.to_string());
+            token_list.tokens.push(token);
+        }
+
+        return token_list;
+    }
+
+    pub fn get_token(&self, index: usize) -> &Token{
+        return &self.tokens.get(index).unwrap();
+    }
+
+    pub fn get_vec(&self) -> &Vec<Token>{
+        return &self.tokens;
     }
 }
