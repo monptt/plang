@@ -8,7 +8,7 @@ pub fn interpret(code: &str) -> String {
     let mut output = String::from("");
     
     // 宣言された変数を格納するハッシュマップ
-    let mut variables: HashMap<&str, Integer> = std::collections::HashMap::new();
+    let mut variables: HashMap<&str, Box<Integer>> = std::collections::HashMap::new();
 
     for line in code.lines(){
         // ここで行ごとに処理する
@@ -18,7 +18,7 @@ pub fn interpret(code: &str) -> String {
             // 変数宣言
             let variable_name = tokens[1];
             let value: Integer = evaluate(tokens[3..].to_vec(), &variables);
-            variables.insert(variable_name, value);
+            variables.insert(variable_name, Box::new(value));
 
 
             output.push_str(&String::from(format!("{}=", variable_name)));
@@ -43,7 +43,7 @@ pub fn interpret(code: &str) -> String {
     return output;
 }
 
-fn evaluate(tokens: Vec<&str>, variables: &HashMap<&str, Integer>) -> Integer{
+fn evaluate(tokens: Vec<&str>, variables: &HashMap<&str, Box<Integer>>) -> Integer{
     let mut ret_value: Integer = Integer{value: 0};
 
     let mut i = 0;
@@ -79,9 +79,9 @@ fn evaluate(tokens: Vec<&str>, variables: &HashMap<&str, Integer>) -> Integer{
     return ret_value;
 }
 
-fn token_to_integer(token: &str, variables: &HashMap<&str, Integer>) -> Integer{
+fn token_to_integer(token: &str, variables: &HashMap<&str, Box<Integer>>) -> Integer{
     if variables.contains_key(token){
-        return *variables.get(token).unwrap();
+        return **variables.get(token).unwrap();
     }else{
         return Integer::new(token);
     }
