@@ -1,5 +1,6 @@
 use super::{super::object::ObjectTrait, value::Value};
 use std::fmt;
+use super::operation;
 
 #[derive(Copy, Clone)]
 pub struct Integer {
@@ -53,5 +54,28 @@ impl fmt::Display for Integer {
 }
 
 impl Value for Integer {
-    
+}
+
+impl operation::Add for Integer{
+    fn add() {
+
+    }
+}
+
+impl operation::Sub for Integer{
+    fn sub() {
+
+    }
+}
+
+impl operation::Mul for Integer{
+    fn mul() {
+
+    }
+}
+
+impl operation::Div for Integer{
+    fn div() {
+
+    }
 }

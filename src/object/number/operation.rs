@@ -1,15 +1,15 @@
-trait Add {
+pub trait Add {
     fn add();
 }
 
-trait Sub {
+pub trait Sub {
     fn sub();
 }
 
-trait Mul {
+pub trait Mul {
     fn mul();
 }
 
-trait Div {
+pub trait Div {
     fn div();
 }
