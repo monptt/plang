@@ -1,5 +1,7 @@
 use std::fmt;
 
+use crate::object::number::integer::Integer;
+
 #[derive(Clone)]
 pub struct Token{
     word: String
@@ -12,6 +14,10 @@ impl Token {
 
     pub fn get_word(&self) -> &String{
         return &self.word;
+    }
+
+    pub fn to_integer(&self) -> Integer{
+        return Integer::new(&self.get_word());
     }
 }
 

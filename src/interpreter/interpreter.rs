@@ -73,10 +73,12 @@ fn evaluate(tokens: Vec<Token>, variables: &HashMap<String, Rc<Integer>>) -> Int
             let num = token_to_integer(tokens[i].get_word(), variables);
             ret_value = Integer::div(ret_value, num);
         }
-        else{
-            ret_value = token_to_integer(token.get_word(), variables);
+        else if variables.contains_key(token.get_word()){
+            return **variables.get(token.get_word()).unwrap();
+        }else{
+            return Integer::new(&token.get_word());
         }
-
+        
         i = i + 1;
     }
     return ret_value;
