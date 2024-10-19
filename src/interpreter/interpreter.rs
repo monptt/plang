@@ -5,6 +5,12 @@ use std::hash::Hash;
 use std::rc::Rc;
 
 use crate::object::number::value::Value;
+use crate::object::number::operation::Add;
+use crate::object::number::operation::Sub;
+use crate::object::number::operation::Mul;
+use crate::object::number::operation::Div;
+
+
 
 use crate::object::number::integer::Integer;
 
@@ -66,22 +72,22 @@ impl Interpreter{
             else if token.get_word() == "+" {
                 i += 1;
                 let num = tokens[i].to_integer();
-                ret_value = Integer::add(ret_value, num);
+                ret_value = ret_value.add(num);
             }
             else if token.get_word() == "-" {
                 i += 1;
                 let num = tokens[i].to_integer();
-                ret_value = Integer::sub(ret_value, num);
+                ret_value = ret_value.sub(num);
             }
             else if token.get_word() == "*" {
                 i += 1;
                 let num = tokens[i].to_integer();
-                ret_value = Integer::mul(ret_value, num);
+                ret_value = ret_value.mul(num);
             }
             else if token.get_word() == "/" {
                 i += 1;
                 let num = tokens[i].to_integer();
-                ret_value = Integer::div(ret_value, num);
+                ret_value = ret_value.div(num);
             }
             else{
                 ret_value = Integer::new(&token.get_word());
