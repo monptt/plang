@@ -27,7 +27,7 @@ impl Interpreter{
             if token_list.get_token(0).get_word() == "let" && token_list.get_token(2).get_word() == "="{
                 // 変数宣言
                 let variable_name = &*token_list.get_token(1).get_word().clone();
-                let value: Integer = self.evaluate(token_list.get_vec()[3..].to_vec(), &self.variables);
+                let value: Integer = self.evaluate(token_list.get_vec()[3..].to_vec());
                 self.variables.insert(variable_name.to_string(), Rc::new(value));
     
     
@@ -39,7 +39,7 @@ impl Interpreter{
             else if token_list.get_token(0).get_word() == "eval"{
                 // 値を評価する
                 let variable_name = token_list.get_token(1).get_word();
-                let value: &Integer = &self.evaluate(token_list.get_vec()[1..].to_vec(), &self.variables);
+                let value: &Integer = &self.evaluate(token_list.get_vec()[1..].to_vec());
     
                 output.push_str(&String::from(format!("{}={}", variable_name, value)));
             }
@@ -53,38 +53,38 @@ impl Interpreter{
         return output;
     }
     
-    fn evaluate(&self, tokens: Vec<Token>, variables: &HashMap<String, Rc<Integer>>) -> Integer{
+    fn evaluate(&self, tokens: Vec<Token>) -> Integer{
         let mut ret_value: Integer = Integer{value: 0};
     
         let mut i = 0;
         while i < tokens.len(){
             let token = &tokens[i];
-    
-            if variables.contains_key(token.get_word()){
-                return **variables.get(token.get_word()).unwrap();
+
+            if self.variables.contains_key(token.get_word()){
+                ret_value = **self.variables.get(token.get_word()).unwrap();
             }
             else if token.get_word() == "+" {
                 i += 1;
-                let num = self.token_to_integer(tokens[i].get_word(), variables);
+                let num = self.token_to_integer(tokens[i].get_word());
                 ret_value = Integer::add(ret_value, num);
             }
             else if token.get_word() == "-" {
                 i += 1;
-                let num = self.token_to_integer(tokens[i].get_word(), variables);
+                let num = self.token_to_integer(tokens[i].get_word());
                 ret_value = Integer::sub(ret_value, num);
             }
             else if token.get_word() == "*" {
                 i += 1;
-                let num = self.token_to_integer(tokens[i].get_word(), variables);
+                let num = self.token_to_integer(tokens[i].get_word());
                 ret_value = Integer::mul(ret_value, num);
             }
             else if token.get_word() == "/" {
                 i += 1;
-                let num = self.token_to_integer(tokens[i].get_word(), variables);
+                let num = self.token_to_integer(tokens[i].get_word());
                 ret_value = Integer::div(ret_value, num);
             }
             else{
-                return Integer::new(&token.get_word());
+                ret_value = Integer::new(&token.get_word());
             }
             
             i = i + 1;
@@ -92,9 +92,9 @@ impl Interpreter{
         return ret_value;
     }
     
-    fn token_to_integer(&self, token: &str, variables: &HashMap<String, Rc<Integer>>) -> Integer{
-        if variables.contains_key(token){
-            return **variables.get(token).unwrap();
+    fn token_to_integer(&self, token: &str) -> Integer{
+        if self.variables.contains_key(token){
+            return **self.variables.get(token).unwrap();
         }else{
             return Integer::new(token);
         }
