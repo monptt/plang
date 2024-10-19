@@ -56,25 +56,33 @@ impl fmt::Display for Integer {
 impl Value for Integer {}
 
 impl operation::Add for Integer {
-    fn add(&self, x :Self) -> Box<dyn Value> {
-        return Box::new(Integer { value: self.value + x.value });
+    fn add(&self, x: Self) -> Integer {
+        return Integer {
+            value: self.value + x.value,
+        };
     }
 }
 
 impl operation::Sub for Integer {
-    fn sub(&self, x :Self) -> Box<dyn Value> {
-        return Box::new(Integer { value: self.value - x.value });
+    fn sub(&self, x: Self) -> Integer {
+        return Integer {
+            value: self.value - x.value,
+        };
     }
 }
 
 impl operation::Mul for Integer {
-    fn mul(&self, x :Self) -> Box<dyn Value> {
-        return Box::new(Integer { value: self.value * x.value });
+    fn mul(&self, x: Self) -> Integer {
+        return Integer {
+            value: self.value * x.value,
+        };
     }
 }
 
 impl operation::Div for Integer {
-    fn div(&self, x :Self) -> Box<dyn Value> {
-        return Box::new(Integer { value: self.value / x.value });
+    fn div(&self, x: Self) -> Integer {
+        return Integer {
+            value: self.value / x.value,
+        };
     }
 }
