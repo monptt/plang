@@ -2,6 +2,9 @@ use wasm_bindgen::prelude::*;
 mod interpreter;
 mod object;
 
+use crate::interpreter::interpreter::Interpreter;
+
+
 #[wasm_bindgen]
 extern {
     pub fn alert(s: &str);
@@ -15,5 +18,6 @@ pub fn greet(name: &str) {
 
 #[wasm_bindgen]
 pub fn interpret(code: &str) -> String {
-    return interpreter::interpreter::interpret(code);
+    let mut interpreter = Interpreter::new();
+    return interpreter.interpret(code);
 }

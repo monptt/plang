@@ -1,6 +1,9 @@
 mod interpreter;
 pub mod object;
 
+use crate::interpreter::interpreter::Interpreter;
+
 fn main(){
-    println!("{}", interpreter::interpreter::interpret("let x = 1 + 2\neval x"));
+    let mut interpreter = Interpreter::new();
+    println!("{}", interpreter.interpret("let x = 1 + 2\neval x"));
 }
