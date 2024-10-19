@@ -65,22 +65,22 @@ impl Interpreter{
             }
             else if token.get_word() == "+" {
                 i += 1;
-                let num = self.token_to_integer(tokens[i].get_word());
+                let num = tokens[i].to_integer();
                 ret_value = Integer::add(ret_value, num);
             }
             else if token.get_word() == "-" {
                 i += 1;
-                let num = self.token_to_integer(tokens[i].get_word());
+                let num = tokens[i].to_integer();
                 ret_value = Integer::sub(ret_value, num);
             }
             else if token.get_word() == "*" {
                 i += 1;
-                let num = self.token_to_integer(tokens[i].get_word());
+                let num = tokens[i].to_integer();
                 ret_value = Integer::mul(ret_value, num);
             }
             else if token.get_word() == "/" {
                 i += 1;
-                let num = self.token_to_integer(tokens[i].get_word());
+                let num = tokens[i].to_integer();
                 ret_value = Integer::div(ret_value, num);
             }
             else{
@@ -92,12 +92,5 @@ impl Interpreter{
         return ret_value;
     }
     
-    fn token_to_integer(&self, token: &str) -> Integer{
-        if self.variables.contains_key(token){
-            return **self.variables.get(token).unwrap();
-        }else{
-            return Integer::new(token);
-        }
-    }
 }
 
