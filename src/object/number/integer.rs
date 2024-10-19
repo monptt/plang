@@ -1,6 +1,6 @@
+use super::operation;
 use super::{super::object::ObjectTrait, value::Value};
 use std::fmt;
-use super::operation;
 
 #[derive(Copy, Clone)]
 pub struct Integer {
@@ -53,29 +53,28 @@ impl fmt::Display for Integer {
     }
 }
 
-impl Value for Integer {
-}
+impl Value for Integer {}
 
-impl operation::Add for Integer{
-    fn add() {
-
+impl operation::Add for Integer {
+    fn add(x :Self) -> Box<dyn Value> {
+        return Box::new(Integer { value: 0 });
     }
 }
 
-impl operation::Sub for Integer{
-    fn sub() {
-
+impl operation::Sub for Integer {
+    fn sub(x :Self) -> Box<dyn Value> {
+        return Box::new(Integer { value: 0 });
     }
 }
 
-impl operation::Mul for Integer{
-    fn mul() {
-
+impl operation::Mul for Integer {
+    fn mul(x :Self) -> Box<dyn Value> {
+        return Box::new(Integer { value: 0 });
     }
 }
 
-impl operation::Div for Integer{
-    fn div() {
-
+impl operation::Div for Integer {
+    fn div(x :Self) -> Box<dyn Value> {
+        return Box::new(Integer { value: 0 });
     }
 }

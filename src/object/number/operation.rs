@@ -1,15 +1,17 @@
+use super::value::Value;
+
 pub trait Add {
-    fn add();
+    fn add(x :Self) -> Box<dyn Value>;
 }
 
 pub trait Sub {
-    fn sub();
+    fn sub(x :Self) -> Box<dyn Value>;
 }
 
 pub trait Mul {
-    fn mul();
+    fn mul(x :Self) -> Box<dyn Value>;
 }
 
 pub trait Div {
-    fn div();
+    fn div(x :Self) -> Box<dyn Value>;
 }
