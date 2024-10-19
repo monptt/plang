@@ -9,7 +9,7 @@ pub struct RationalNumber {
 impl Value for RationalNumber {}
 
 impl operation::Add for RationalNumber {
-    fn add(x :Self) -> Box<dyn Value> {
+    fn add(&self, x :Self) -> Box<dyn Value> {
         return Box::new(RationalNumber {
             numerator: 0,
             denominator: 0,
@@ -18,7 +18,7 @@ impl operation::Add for RationalNumber {
 }
 
 impl operation::Sub for RationalNumber {
-    fn sub(x :Self) -> Box<dyn Value> {
+    fn sub(&self, x :Self) -> Box<dyn Value> {
         return Box::new(RationalNumber {
             numerator: 0,
             denominator: 0,
@@ -27,7 +27,7 @@ impl operation::Sub for RationalNumber {
 }
 
 impl operation::Mul for RationalNumber {
-    fn mul(x :Self) -> Box<dyn Value> {
+    fn mul(&self, x :Self) -> Box<dyn Value> {
         return Box::new(RationalNumber {
             numerator: 0,
             denominator: 0,
@@ -36,7 +36,7 @@ impl operation::Mul for RationalNumber {
 }
 
 impl operation::Div for RationalNumber {
-    fn div(x :Self) -> Box<dyn Value> {
+    fn div(&self, x :Self) -> Box<dyn Value> {
         return Box::new(RationalNumber {
             numerator: 0,
             denominator: 0,
