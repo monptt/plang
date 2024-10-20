@@ -8,7 +8,7 @@ pub struct Token{
 }
 
 impl Token {
-    fn new(word: String) -> Token{
+    pub fn new(word: String) -> Token{
         return Token{word: word};
     }
 

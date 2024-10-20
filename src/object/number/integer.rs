@@ -62,3 +62,9 @@ impl operation::Div for Integer {
         };
     }
 }
+
+impl From<i32> for Integer{
+    fn from(value: i32) -> Self {
+        return Integer{value: value};
+    }
+}
