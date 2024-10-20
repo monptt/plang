@@ -47,10 +47,12 @@ impl Interpreter {
                 }
             } else if token_list.get_token(0).get_word() == "eval" {
                 // 値を評価する
-                let variable_name = token_list.get_token(1).get_word();
                 let value: &RationalNumber = &self.evaluate(&token_list.get_vec()[1..].to_vec());
 
-                output.push_str(&String::from(format!("{}={}", variable_name, value)));
+                for token in token_list.get_vec()[1..].to_vec() {
+                    output.push_str(&String::from(format!("{}", token)));
+                }
+                output.push_str(&String::from(format!("={}", value)));
             } else {
                 // 何も当てはまらない場合はとりあえずそのまま出す
                 output.push_str(line);

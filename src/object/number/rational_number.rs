@@ -67,7 +67,7 @@ impl fmt::Display for RationalNumber {
         if self.denominator.value == 1 {
             return write!(f, "{}", self.numerator);
         }else {
-            return write!(f, "{}/{}", self.numerator, self.denominator);
+            return write!(f, "\\frac{{ {} }}{{ {} }}", self.numerator, self.denominator);
         }
     }
 }
