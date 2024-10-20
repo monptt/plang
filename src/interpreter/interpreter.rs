@@ -4,6 +4,7 @@ use std::collections::HashMap;
 use std::hash::Hash;
 use std::rc::Rc;
 
+use crate::object::number::rational_number::RationalNumber;
 use crate::object::number::value::Value;
 use crate::object::number::operation::Add;
 use crate::object::number::operation::Sub;
@@ -15,7 +16,7 @@ use crate::object::number::operation::Div;
 use crate::object::number::integer::Integer;
 
 pub struct Interpreter{
-    variables: HashMap<String, Rc<Integer>>
+    variables: HashMap<String, Rc<RationalNumber>>
 }
 
 impl Interpreter{
@@ -33,7 +34,7 @@ impl Interpreter{
             if token_list.get_token(0).get_word() == "let" && token_list.get_token(2).get_word() == "="{
                 // 変数宣言
                 let variable_name = &*token_list.get_token(1).get_word().clone();
-                let value: Integer = self.evaluate(token_list.get_vec()[3..].to_vec());
+                let value: RationalNumber = self.evaluate(token_list.get_vec()[3..].to_vec());
                 self.variables.insert(variable_name.to_string(), Rc::new(value));
     
     
@@ -45,7 +46,7 @@ impl Interpreter{
             else if token_list.get_token(0).get_word() == "eval"{
                 // 値を評価する
                 let variable_name = token_list.get_token(1).get_word();
-                let value: &Integer = &self.evaluate(token_list.get_vec()[1..].to_vec());
+                let value: &RationalNumber = &self.evaluate(token_list.get_vec()[1..].to_vec());
     
                 output.push_str(&String::from(format!("{}={}", variable_name, value)));
             }
@@ -59,8 +60,8 @@ impl Interpreter{
         return output;
     }
     
-    fn evaluate(&self, tokens: Vec<Token>) -> Integer{
-        let mut ret_value: Integer = Integer{value: 0};
+    fn evaluate(&self, tokens: Vec<Token>) -> RationalNumber{
+        let mut ret_value: RationalNumber = RationalNumber::from(&Integer{value: 0});
     
         let mut i = 0;
         while i < tokens.len(){
@@ -71,26 +72,26 @@ impl Interpreter{
             }
             else if token.get_word() == "+" {
                 i += 1;
-                let num = tokens[i].to_integer();
+                let num = RationalNumber::from(&tokens[i].to_integer());
                 ret_value = ret_value.add(num);
             }
             else if token.get_word() == "-" {
                 i += 1;
-                let num = tokens[i].to_integer();
+                let num = RationalNumber::from(&tokens[i].to_integer());
                 ret_value = ret_value.sub(num);
             }
             else if token.get_word() == "*" {
                 i += 1;
-                let num = tokens[i].to_integer();
+                let num = RationalNumber::from(&tokens[i].to_integer());
                 ret_value = ret_value.mul(num);
             }
             else if token.get_word() == "/" {
                 i += 1;
-                let num = tokens[i].to_integer();
+                let num = RationalNumber::from(&tokens[i].to_integer());
                 ret_value = ret_value.div(num);
             }
             else{
-                ret_value = Integer::new(&token.get_word());
+                ret_value = RationalNumber::from(&tokens[i].to_integer());
             }
             
             i = i + 1;
