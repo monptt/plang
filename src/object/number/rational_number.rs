@@ -14,8 +14,8 @@ impl Value for RationalNumber {}
 impl operation::Add for RationalNumber {
     fn add(&self, x: Self) -> Self {
         return RationalNumber {
-            numerator: self.numerator + x.numerator,
-            denominator: 1,
+            numerator: self.numerator * x.denominator + x.numerator * self.denominator,
+            denominator: self.denominator * x.denominator,
         };
     }
 }
@@ -23,8 +23,8 @@ impl operation::Add for RationalNumber {
 impl operation::Sub for RationalNumber {
     fn sub(&self, x: Self) -> Self {
         return RationalNumber {
-            numerator: self.numerator - x.numerator,
-            denominator: 1,
+            numerator: self.numerator * x.denominator - x.numerator * self.denominator,
+            denominator: self.denominator * x.denominator,
         };
     }
 }
@@ -33,7 +33,7 @@ impl operation::Mul for RationalNumber {
     fn mul(&self, x: Self) -> Self {
         return RationalNumber {
             numerator: self.numerator * x.numerator,
-            denominator: 1,
+            denominator: self.denominator * x.denominator,
         };
     }
 }
@@ -41,8 +41,8 @@ impl operation::Mul for RationalNumber {
 impl operation::Div for RationalNumber {
     fn div(&self, x: Self) -> Self {
         return RationalNumber {
-            numerator: self.numerator / x.numerator,
-            denominator: self.numerator / x.numerator,
+            numerator: self.numerator * x.denominator,
+            denominator: self.denominator * x.numerator,
         };
     }
 }
@@ -58,7 +58,7 @@ impl From<&Integer> for RationalNumber {
 
 impl fmt::Display for RationalNumber {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        if(self.denominator == 1){
+        if self.denominator == 1 {
             return write!(f, "{}", self.numerator);
         }else {
             return write!(f, "{}/{}", self.numerator, self.denominator);

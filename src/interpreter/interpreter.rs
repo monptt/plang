@@ -84,7 +84,6 @@ impl Interpreter {
 
         // +, -を処理
         for i in (0..n).rev() {
-            println!("idx:{}", i);
             let token = &tokens[i];
             if token.get_word() == "+" {
                 let lhs = self.evaluate(&tokens[0..i].to_vec());
