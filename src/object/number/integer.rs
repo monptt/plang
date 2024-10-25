@@ -14,6 +14,18 @@ impl Integer {
             value: num.parse().unwrap(),
         };
     }
+
+    pub fn gcd(a: Integer, b: Integer) -> Integer {
+        if a.value < b.value {
+            return Self::gcd(b, a);
+        } else {
+            if b.value == 0 {
+                return a;
+            } else {
+                return Self::gcd(b, a % b);
+            }
+        }
+    }
 }
 
 impl ObjectTrait for Integer {
@@ -64,45 +76,53 @@ impl operation::Div for Integer {
     }
 }
 
-impl ops::Add<Integer> for Integer{
+impl ops::Add<Integer> for Integer {
     type Output = Integer;
-    fn add(self, rhs: Integer) -> Integer{
+    fn add(self, rhs: Integer) -> Integer {
         return Integer {
-            value: self.value + rhs.value
+            value: self.value + rhs.value,
         };
     }
 }
 
-impl ops::Sub<Integer> for Integer{
+impl ops::Sub<Integer> for Integer {
     type Output = Integer;
-    fn sub(self, rhs: Integer) -> Integer{
+    fn sub(self, rhs: Integer) -> Integer {
         return Integer {
-            value: self.value - rhs.value
+            value: self.value - rhs.value,
         };
     }
 }
 
-impl ops::Mul<Integer> for Integer{
+impl ops::Mul<Integer> for Integer {
     type Output = Integer;
-    fn mul(self, rhs: Integer) -> Integer{
+    fn mul(self, rhs: Integer) -> Integer {
         return Integer {
-            value: self.value * rhs.value
+            value: self.value * rhs.value,
         };
     }
 }
 
-impl ops::Div<Integer> for Integer{
+impl ops::Div<Integer> for Integer {
     type Output = Integer;
-    fn div(self, rhs: Integer) -> Integer{
+    fn div(self, rhs: Integer) -> Integer {
         return Integer {
-            value: self.value / rhs.value
+            value: self.value / rhs.value,
         };
     }
 }
 
+impl ops::Rem for Integer {
+    type Output = Integer;
+    fn rem(self, rhs: Self) -> Self::Output {
+        return Integer {
+            value: self.value % rhs.value,
+        };
+    }
+}
 
-impl From<i32> for Integer{
+impl From<i32> for Integer {
     fn from(value: i32) -> Self {
-        return Integer{value: value};
+        return Integer { value: value };
     }
 }

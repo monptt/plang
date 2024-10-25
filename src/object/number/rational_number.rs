@@ -1,6 +1,7 @@
 use super::integer::Integer;
 
 use std::ops;
+use std::result;
 
 use super::operation;
 use super::operation::Add;
@@ -15,6 +16,16 @@ use std::fmt;
 pub struct RationalNumber {
     numerator: Integer,
     denominator: Integer,
+}
+
+impl RationalNumber {
+    fn reduce(x: &RationalNumber) -> RationalNumber {
+        let gcd = Integer::gcd(x.numerator, x.denominator);
+        return RationalNumber {
+            numerator: x.numerator / gcd,
+            denominator: x.denominator / gcd,
+        };
+    }
 }
 
 impl Value for RationalNumber {}
@@ -32,20 +43,14 @@ impl operation::Sub for RationalNumber {
 }
 
 impl operation::Mul for RationalNumber {
-    fn mul(self, x: Self) -> Self {
-        return RationalNumber {
-            numerator: self.numerator.mul(x.numerator),
-            denominator: self.denominator.mul(x.denominator),
-        };
+    fn mul(self, rhs: Self) -> Self {
+        return self * rhs;
     }
 }
 
 impl operation::Div for RationalNumber {
-    fn div(self, x: Self) -> Self {
-        return RationalNumber {
-            numerator: self.numerator.mul(x.denominator),
-            denominator: self.denominator.mul(x.numerator),
-        };
+    fn div(self, rhs: Self) -> Self {
+        return self / rhs;
     }
 }
 
@@ -61,40 +66,44 @@ impl From<&Integer> for RationalNumber {
 impl ops::Add<RationalNumber> for RationalNumber {
     type Output = RationalNumber;
     fn add(self, rhs: RationalNumber) -> RationalNumber {
-        return RationalNumber {
+        let result = RationalNumber {
             numerator: self.numerator * rhs.denominator + rhs.numerator * self.denominator,
             denominator: self.denominator * rhs.denominator,
         };
+        return RationalNumber::reduce(&result);
     }
 }
 
 impl ops::Sub<RationalNumber> for RationalNumber {
     type Output = RationalNumber;
     fn sub(self, rhs: RationalNumber) -> RationalNumber {
-        return RationalNumber {
+        let result = RationalNumber {
             numerator: self.numerator * rhs.denominator - rhs.numerator * self.denominator,
             denominator: self.denominator * rhs.denominator,
         };
+        return RationalNumber::reduce(&result);
     }
 }
 
 impl ops::Mul<RationalNumber> for RationalNumber {
     type Output = RationalNumber;
     fn mul(self, x: Self) -> Self {
-        return RationalNumber {
+        let result = RationalNumber {
             numerator: self.numerator * x.numerator,
             denominator: self.denominator * x.denominator,
         };
+        return RationalNumber::reduce(&result);
     }
 }
 
 impl ops::Div<RationalNumber> for RationalNumber {
     type Output = RationalNumber;
     fn div(self, x: Self) -> Self {
-        return RationalNumber {
+        let result = RationalNumber {
             numerator: self.numerator * x.denominator,
             denominator: self.denominator * x.numerator,
         };
+        return RationalNumber::reduce(&result);
     }
 }
 
