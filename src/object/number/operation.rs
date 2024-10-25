@@ -1,17 +1,17 @@
 use super::value::Value;
 
 pub trait Add {
-    fn add(&self, x :Self) -> Self;
+    fn add(self, x :Self) -> Self;
 }
 
 pub trait Sub {
-    fn sub(&self, x :Self) -> Self;
+    fn sub(self, x :Self) -> Self;
 }
 
 pub trait Mul {
-    fn mul(&self, x :Self) -> Self;
+    fn mul(self, x :Self) -> Self;
 }
 
 pub trait Div {
-    fn div(&self, x :Self) -> Self;
+    fn div(self, x :Self) -> Self;
 }

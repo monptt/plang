@@ -1,6 +1,7 @@
 use super::operation;
 use super::{super::object::ObjectTrait, value::Value};
 use std::fmt;
+use std::ops;
 
 #[derive(Copy, Clone)]
 pub struct Integer {
@@ -32,7 +33,7 @@ impl fmt::Display for Integer {
 impl Value for Integer {}
 
 impl operation::Add for Integer {
-    fn add(&self, x: Self) -> Integer {
+    fn add(self, x: Self) -> Integer {
         return Integer {
             value: self.value + x.value,
         };
@@ -40,7 +41,7 @@ impl operation::Add for Integer {
 }
 
 impl operation::Sub for Integer {
-    fn sub(&self, x: Self) -> Integer {
+    fn sub(self, x: Self) -> Integer {
         return Integer {
             value: self.value - x.value,
         };
@@ -48,7 +49,7 @@ impl operation::Sub for Integer {
 }
 
 impl operation::Mul for Integer {
-    fn mul(&self, x: Self) -> Integer {
+    fn mul(self, x: Self) -> Integer {
         return Integer {
             value: self.value * x.value,
         };
@@ -56,12 +57,49 @@ impl operation::Mul for Integer {
 }
 
 impl operation::Div for Integer {
-    fn div(&self, x: Self) -> Integer {
+    fn div(self, x: Self) -> Integer {
         return Integer {
             value: self.value / x.value,
         };
     }
 }
+
+impl ops::Add<Integer> for Integer{
+    type Output = Integer;
+    fn add(self, rhs: Integer) -> Integer{
+        return Integer {
+            value: self.value + rhs.value
+        };
+    }
+}
+
+impl ops::Sub<Integer> for Integer{
+    type Output = Integer;
+    fn sub(self, rhs: Integer) -> Integer{
+        return Integer {
+            value: self.value - rhs.value
+        };
+    }
+}
+
+impl ops::Mul<Integer> for Integer{
+    type Output = Integer;
+    fn mul(self, rhs: Integer) -> Integer{
+        return Integer {
+            value: self.value * rhs.value
+        };
+    }
+}
+
+impl ops::Div<Integer> for Integer{
+    type Output = Integer;
+    fn div(self, rhs: Integer) -> Integer{
+        return Integer {
+            value: self.value / rhs.value
+        };
+    }
+}
+
 
 impl From<i32> for Integer{
     fn from(value: i32) -> Self {
