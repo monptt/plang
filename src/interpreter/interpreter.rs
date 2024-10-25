@@ -30,7 +30,7 @@ impl Interpreter {
 
         for line in code.lines() {
             // ここで行ごとに処理する
-            let token_list = Box::new(tokenizer::TokenList::new(line));
+            let token_list = Box::new(tokenizer::TokenList::new(&line.to_string()));
 
             if token_list.get_token(0).get_word() == "let"
                 && token_list.get_token(2).get_word() == "="

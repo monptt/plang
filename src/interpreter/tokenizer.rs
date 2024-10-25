@@ -32,9 +32,10 @@ pub struct TokenList{
 }
 
 impl TokenList{
-    pub fn new(line : &str) -> TokenList{
+    pub fn new(line : &String) -> TokenList{
         let mut token_list = TokenList{tokens: Vec::new()};
 
+        // とりあえずスペースで区切る
         let words: Vec<_> = line.split(" ").collect();
 
         for word in words{
