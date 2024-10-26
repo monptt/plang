@@ -64,8 +64,6 @@ impl Interpreter {
     }
 
     fn evaluate(&self, tokens: &Vec<Token>) -> RationalNumber {
-        let mut ret_value: RationalNumber = RationalNumber::from(&Integer { value: 0 });
-
         let n = tokens.len();
         if n == 0 {
             // 何もないとき仮に0を返しておく
