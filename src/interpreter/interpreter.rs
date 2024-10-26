@@ -82,9 +82,23 @@ impl Interpreter {
             }
         }
 
+        // 括弧の数をカウントしておく（右から見ていくため、閉じ括弧で+1,開き括弧で-1）
+        let mut bracket_count: i32 = 0;
+
         // +, -を処理
         for i in (0..n).rev() {
             let token = &tokens[i];
+            
+            if token.get_word() == ")"{
+                bracket_count += 1;
+            }else if token.get_word() == "("{
+                bracket_count -= 1;
+            }
+
+            if bracket_count != 0 {
+                continue;
+            }
+
             if token.get_word() == "+" {
                 let lhs = self.evaluate(&tokens[0..i].to_vec());
                 let rhs = self.evaluate(&tokens[i + 1..n].to_vec());
@@ -98,8 +112,18 @@ impl Interpreter {
 
         // *, / を処理
         for i in (0..n).rev() {
-            println!("idx:{}", i);
             let token = &tokens[i];
+            
+            if token.get_word() == ")"{
+                bracket_count += 1;
+            }else if token.get_word() == "("{
+                bracket_count -= 1;
+            }
+
+            if bracket_count != 0 {
+                continue;
+            }
+            
             if token.get_word() == "*" {
                 let lhs = self.evaluate(&tokens[0..i].to_vec());
                 let rhs = self.evaluate(&tokens[i + 1..n].to_vec());

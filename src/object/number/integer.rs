@@ -2,6 +2,7 @@ use super::operation;
 use super::{super::object::ObjectTrait, value::Value};
 use std::fmt;
 use std::ops;
+use std::cmp;
 
 #[derive(Copy, Clone)]
 pub struct Integer {
@@ -118,6 +119,12 @@ impl ops::Rem for Integer {
         return Integer {
             value: self.value % rhs.value,
         };
+    }
+}
+
+impl cmp::PartialEq for Integer {
+    fn eq(&self, other: &Self) -> bool {
+        return self.value == other.value;
     }
 }
 

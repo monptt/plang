@@ -1,5 +1,6 @@
 use super::integer::Integer;
 
+use std::cmp;
 use std::ops;
 use std::result;
 
@@ -8,6 +9,7 @@ use super::operation::Add;
 use super::operation::Div;
 use super::operation::Mul;
 use super::operation::Sub;
+
 
 use super::value::Value;
 use std::fmt;
@@ -104,6 +106,12 @@ impl ops::Div<RationalNumber> for RationalNumber {
             denominator: self.denominator * x.numerator,
         };
         return RationalNumber::reduce(&result);
+    }
+}
+
+impl cmp::PartialEq for RationalNumber {
+    fn eq(&self, other: &Self) -> bool {
+        return self.numerator * other.denominator == other.numerator * self.denominator;
     }
 }
 
