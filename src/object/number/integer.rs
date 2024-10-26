@@ -1,8 +1,8 @@
 use super::operation;
 use super::{super::object::ObjectTrait, value::Value};
+use std::cmp;
 use std::fmt;
 use std::ops;
-use std::cmp;
 
 #[derive(Copy, Clone)]
 pub struct Integer {
@@ -122,9 +122,19 @@ impl ops::Rem for Integer {
     }
 }
 
+// 等価演算子
 impl cmp::PartialEq for Integer {
     fn eq(&self, other: &Self) -> bool {
         return self.value == other.value;
+    }
+}
+#[cfg(test)]
+mod tests {
+    use crate::object::number::integer::Integer;
+
+    #[test]
+    fn test_integer_eq() {
+        assert!(Integer { value: 1 } == Integer { value: 1 });
     }
 }
 
