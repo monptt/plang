@@ -10,7 +10,6 @@ use super::operation::Div;
 use super::operation::Mul;
 use super::operation::Sub;
 
-
 use super::value::Value;
 use std::fmt;
 
@@ -21,6 +20,13 @@ pub struct RationalNumber {
 }
 
 impl RationalNumber {
+    fn new(a: Integer, b: Integer) -> RationalNumber {
+        return RationalNumber {
+            numerator: a,
+            denominator: b,
+        };
+    }
+
     fn reduce(x: &RationalNumber) -> RationalNumber {
         let gcd = Integer::gcd(x.numerator, x.denominator);
         return RationalNumber {
@@ -109,9 +115,19 @@ impl ops::Div<RationalNumber> for RationalNumber {
     }
 }
 
+// 等価演算子
 impl cmp::PartialEq for RationalNumber {
     fn eq(&self, other: &Self) -> bool {
         return self.numerator * other.denominator == other.numerator * self.denominator;
+    }
+}
+#[cfg(test)]
+mod tests {
+    use crate::object::number::{integer::Integer, rational_number::RationalNumber};
+
+    #[test]
+    fn test_rational_number_eq() {
+        assert!(RationalNumber::new(Integer::from(1), Integer::from(2)) == RationalNumber::new(Integer::from(2), Integer::from(4)));
     }
 }
 
