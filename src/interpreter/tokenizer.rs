@@ -41,7 +41,7 @@ impl TokenList {
         for word in words {
             let mut temp_token = String::from("");
             for c in word.chars() {
-                if "=+-*/[],".contains(c) {
+                if "=+-*/()[],".contains(c) {
                     // 記号が来たらその時点でトークン化
                     if temp_token.len() > 0 {
                         let token = Token::new(&temp_token);
