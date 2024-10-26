@@ -72,6 +72,12 @@ impl TokenList {
         return &self.tokens.get(index).unwrap();
     }
 
+    pub fn get_slice(&self, begin: usize, end: usize) -> TokenList{
+        return TokenList{
+            tokens: self.tokens[begin..end].to_vec()
+        }
+    }
+
     pub fn get_vec(&self) -> &Vec<Token> {
         return &self.tokens;
     }
