@@ -88,11 +88,11 @@ impl Interpreter {
             if token.get_word() == "+" {
                 let lhs = self.evaluate(&tokens[0..i].to_vec());
                 let rhs = self.evaluate(&tokens[i + 1..n].to_vec());
-                return lhs.add(rhs);
+                return lhs + rhs;
             } else if token.get_word() == "-" {
                 let lhs = self.evaluate(&tokens[0..i].to_vec());
                 let rhs = self.evaluate(&tokens[i + 1..n].to_vec());
-                return lhs.sub(rhs);
+                return lhs -rhs;
             }
         }
 
@@ -103,11 +103,11 @@ impl Interpreter {
             if token.get_word() == "*" {
                 let lhs = self.evaluate(&tokens[0..i].to_vec());
                 let rhs = self.evaluate(&tokens[i + 1..n].to_vec());
-                return lhs.mul(rhs);
+                return lhs * rhs;
             } else if token.get_word() == "/" {
                 let lhs = self.evaluate(&tokens[0..i].to_vec());
                 let rhs = self.evaluate(&tokens[i + 1..n].to_vec());
-                return lhs.div(rhs);
+                return lhs / rhs;
             }
         }
 
