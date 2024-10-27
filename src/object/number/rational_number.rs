@@ -71,6 +71,15 @@ impl From<&Integer> for RationalNumber {
     }
 }
 
+impl From<i32> for RationalNumber {
+    fn from(x: i32) -> RationalNumber {
+        return RationalNumber {
+            numerator: Integer::from(x),
+            denominator: Integer::from(1)
+        }
+    }
+}
+
 impl ops::Add<RationalNumber> for RationalNumber {
     type Output = RationalNumber;
     fn add(self, rhs: RationalNumber) -> RationalNumber {

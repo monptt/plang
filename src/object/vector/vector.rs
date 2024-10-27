@@ -1,21 +1,49 @@
+use std::collections::btree_map::Range;
+
+use crate::object::number::{rational_number::RationalNumber, value};
+
 // 数ベクトル
-struct NumericalVector{
-    dimension: i32
+struct NumericalVector {
+    dimension: usize,
+    vec: Vec<RationalNumber>,
 }
 
-impl NumericalVector{
-    fn new(dim: i32) -> NumericalVector {
-        return NumericalVector{dimension: dim};
+impl NumericalVector {
+    fn new(dim: usize) -> NumericalVector {
+        let mut ret_vec = NumericalVector {
+            dimension: dim,
+            vec: Vec::with_capacity(dim),
+        };
+
+        for i in 0..dim {
+            let value_zero = RationalNumber::from(0);
+            ret_vec.vec.push(value_zero);
+        }
+        return ret_vec;
+    }
+
+    fn set_value(&mut self, idx: usize, value: RationalNumber){
+        self.vec[idx] = value;
+    }
+
+    fn get_value(&self, i: usize) -> RationalNumber{
+        return self.vec[i];
     }
 }
 
 #[cfg(test)]
-mod tests{
+mod tests {
+    use crate::object::number::rational_number::RationalNumber;
+
     use super::NumericalVector;
 
     #[test]
-    fn test_new_vector(){
+    fn test_new_vector() {
+        // ベクトルの初期化テスト
         let n = 3;
-        NumericalVector::new(n);
+        let vec = NumericalVector::new(n);
+        for i in 0..n {
+            assert!(vec.get_value(i) == RationalNumber::from(0));
+        }
     }
 }
