@@ -82,6 +82,11 @@ impl Interpreter {
             }
         }
 
+        // 括弧に囲まれてる場合
+        if tokens[0].get_word() == "(" && tokens[tokens.len()-1].get_word() == ")" {
+            return self.evaluate(&tokens[1..tokens.len()-1].to_vec());
+        }
+
         // 括弧の数をカウントしておく（右から見ていくため、閉じ括弧で+1,開き括弧で-1）
         let mut bracket_count: i32 = 0;
 
