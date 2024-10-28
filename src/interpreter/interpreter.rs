@@ -14,13 +14,16 @@ use crate::object::number::value::Value;
 
 use crate::object::number::integer::Integer;
 
-#[derive(Clone, Copy)]
+use crate::object::vector::vector::NumericalVector;
+
+#[derive(Clone)]
 enum Variable {
-    Number(RationalNumber)
+    Number(RationalNumber),
+    Vector(NumericalVector)
 }
 
 pub struct Interpreter {
-    variables: HashMap<String, Rc<Variable>>,
+    variables: HashMap<String, Variable>,
 }
 
 impl Interpreter {
@@ -47,7 +50,7 @@ impl Interpreter {
                 let variable_value = Variable::Number(value);
 
                 self.variables
-                    .insert(variable_name.to_string(), Rc::new(variable_value));
+                    .insert(variable_name.to_string(), variable_value);
 
                 output.push_str(&String::from(format!("{}=", variable_name)));
                 for token in token_list.get_vec()[3..].to_vec() {
@@ -61,6 +64,9 @@ impl Interpreter {
                     output.push_str(&String::from(format!("{}", token)));
                 }
                 output.push_str(&String::from(format!("={}", value)));
+            } else if token_list.get_token(0).get_word() == "vec" {
+                // ベクトルを宣言する
+
             } else {
                 // 何も当てはまらない場合はとりあえずそのまま出す
                 output.push_str(line);
@@ -83,10 +89,13 @@ impl Interpreter {
 
             if self.variables.contains_key(token.get_word()) {
                 // 変数の場合
-                let value = **self.variables.get(token.get_word()).unwrap();
+                let value = self.variables.get(token.get_word()).unwrap();
                 match value {
                     Variable::Number(num) => {
-                        return num;
+                        return *num;
+                    }
+                    Variable::Vector(vec) => {
+                        return RationalNumber::from(0);
                     }
                 }
             } else {
@@ -96,8 +105,8 @@ impl Interpreter {
         }
 
         // 括弧に囲まれてる場合
-        if tokens[0].get_word() == "(" && tokens[tokens.len()-1].get_word() == ")" {
-            return self.evaluate(&tokens[1..tokens.len()-1].to_vec());
+        if tokens[0].get_word() == "(" && tokens[tokens.len() - 1].get_word() == ")" {
+            return self.evaluate(&tokens[1..tokens.len() - 1].to_vec());
         }
 
         // 括弧の数をカウントしておく（右から見ていくため、閉じ括弧で+1,開き括弧で-1）
@@ -106,10 +115,10 @@ impl Interpreter {
         // +, -を処理
         for i in (0..n).rev() {
             let token = &tokens[i];
-            
-            if token.get_word() == ")"{
+
+            if token.get_word() == ")" {
                 bracket_count += 1;
-            }else if token.get_word() == "("{
+            } else if token.get_word() == "(" {
                 bracket_count -= 1;
             }
 
@@ -124,24 +133,24 @@ impl Interpreter {
             } else if token.get_word() == "-" {
                 let lhs = self.evaluate(&tokens[0..i].to_vec());
                 let rhs = self.evaluate(&tokens[i + 1..n].to_vec());
-                return lhs -rhs;
+                return lhs - rhs;
             }
         }
 
         // *, / を処理
         for i in (0..n).rev() {
             let token = &tokens[i];
-            
-            if token.get_word() == ")"{
+
+            if token.get_word() == ")" {
                 bracket_count += 1;
-            }else if token.get_word() == "("{
+            } else if token.get_word() == "(" {
                 bracket_count -= 1;
             }
 
             if bracket_count != 0 {
                 continue;
             }
-            
+
             if token.get_word() == "*" {
                 let lhs = self.evaluate(&tokens[0..i].to_vec());
                 let rhs = self.evaluate(&tokens[i + 1..n].to_vec());

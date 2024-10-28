@@ -6,7 +6,7 @@ use crate::object::number::{rational_number::RationalNumber, value};
 
 // 
 #[derive(Clone)]
-struct NumericalVector {
+pub struct NumericalVector {
     dimension: usize,
     vec: Vec<RationalNumber>,
 }
