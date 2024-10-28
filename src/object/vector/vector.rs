@@ -1,6 +1,7 @@
 use std::collections::btree_map::Range;
 use std::ops;
 use std::cmp;
+use std::fmt;
 
 use crate::object::number::{rational_number::RationalNumber, value};
 
@@ -47,6 +48,19 @@ impl cmp::PartialEq for NumericalVector {
         }
 
         return  true;
+    }
+}
+
+impl fmt::Display for NumericalVector {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let mut str = String::from("");
+        for i in 0..self.dimension {
+            if i != 0 {
+                str += ",";
+            }
+            str += &self.vec[i].to_string();
+        }
+        return write!(f, "[{}]_{{\\in \\mathbb{{R}} ^ {} }}", str, self.dimension);
     }
 }
 

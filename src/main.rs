@@ -5,5 +5,5 @@ use crate::interpreter::interpreter::Interpreter;
 
 fn main(){
     let mut interpreter = Interpreter::new();
-    println!("{}", interpreter.interpret("let x = 1 + 2 * 3\neval x"));
+    println!("{}", interpreter.interpret("vec x = [2,4,3]"));
 }

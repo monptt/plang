@@ -71,25 +71,28 @@ impl Interpreter {
                 // ベクトルをパース
                 let mut temp_vec: Vec<RationalNumber> = Vec::new();
                 let mut dim = 0;
-                let mut start_idx = 3;
-                for i in 3..token_list.get_vec().len() {
+                let mut start_idx = 4;
+                for i in 4..token_list.get_vec().len()-1 {
                     if token_list.get_token(i).get_word() == "," {
                         let value = self.evaluate(token_list.get_slice(start_idx, i).get_vec());
+                        
                         temp_vec.push(value);
                         dim += 1;
                         start_idx = i + 1;
                     }
                 }
-                let value = self.evaluate(token_list.get_slice(start_idx, token_list.get_vec().len()).get_vec());
+                let value = self.evaluate(token_list.get_slice(start_idx, token_list.get_vec().len()-1).get_vec());
+                dim += 1;
+                temp_vec.push(value);
 
                 // 変数リストに入れる
                 let mut vec = NumericalVector::new(dim);
                 for i in 0..dim {
-                    vec.set_value(i, value);
+                    vec.set_value(i, temp_vec[i]);
                 }
-                self.variables.insert(name.clone(), Variable::Vector(vec));
+                self.variables.insert(name.clone(), Variable::Vector(vec.clone()));
 
-                
+                output.push_str(&String::from(format!("{}={}", name, vec)));
 
             } else {
                 // 何も当てはまらない場合はとりあえずそのまま出す
