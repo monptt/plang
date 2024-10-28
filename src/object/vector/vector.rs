@@ -1,8 +1,11 @@
 use std::collections::btree_map::Range;
+use std::ops;
+use std::cmp;
 
 use crate::object::number::{rational_number::RationalNumber, value};
 
-// 数ベクトル
+// 
+#[derive(Clone)]
 struct NumericalVector {
     dimension: usize,
     vec: Vec<RationalNumber>,
@@ -31,6 +34,22 @@ impl NumericalVector {
     }
 }
 
+impl cmp::PartialEq for NumericalVector {
+    fn eq(&self, other: &Self) -> bool {
+        if self.dimension != other.dimension {
+            return false;
+        }
+
+        for i in 0..self.dimension {
+            if self.get_value(i) != other.get_value(i) {
+                return false;
+            }
+        }
+
+        return  true;
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::object::number::rational_number::RationalNumber;
@@ -45,5 +64,28 @@ mod tests {
         for i in 0..n {
             assert!(vec.get_value(i) == RationalNumber::from(0));
         }
+    }
+
+    #[test]
+    fn test_vector_eq() {
+        let n = 3;
+        let mut vec_a = NumericalVector::new(n);
+        let mut vec_b = NumericalVector::new(n);
+        let mut vec_c = NumericalVector::new(n);
+
+        vec_a.set_value(0, RationalNumber::from(1));
+        vec_a.set_value(1, RationalNumber::from(2));
+        vec_a.set_value(2, RationalNumber::from(3));
+
+        vec_b.set_value(0, RationalNumber::from(1));
+        vec_b.set_value(1, RationalNumber::from(2));
+        vec_b.set_value(2, RationalNumber::from(3));
+
+        vec_c.set_value(0, RationalNumber::from(3));
+        vec_c.set_value(1, RationalNumber::from(4));
+        vec_c.set_value(2, RationalNumber::from(5));
+
+        assert!(vec_a == vec_b);
+        assert!(vec_a != vec_c);
     }
 }
