@@ -12,7 +12,7 @@ pub struct NumericalVector {
 }
 
 impl NumericalVector {
-    fn new(dim: usize) -> NumericalVector {
+    pub fn new(dim: usize) -> NumericalVector {
         let mut ret_vec = NumericalVector {
             dimension: dim,
             vec: Vec::with_capacity(dim),
@@ -25,11 +25,11 @@ impl NumericalVector {
         return ret_vec;
     }
 
-    fn set_value(&mut self, idx: usize, value: RationalNumber){
+    pub fn set_value(&mut self, idx: usize, value: RationalNumber){
         self.vec[idx] = value;
     }
 
-    fn get_value(&self, i: usize) -> RationalNumber{
+    pub fn get_value(&self, i: usize) -> RationalNumber{
         return self.vec[i];
     }
 }

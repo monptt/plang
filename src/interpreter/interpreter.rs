@@ -66,6 +66,30 @@ impl Interpreter {
                 output.push_str(&String::from(format!("={}", value)));
             } else if token_list.get_token(0).get_word() == "vec" {
                 // ベクトルを宣言する
+                let name = token_list.get_token(1).get_word();
+
+                // ベクトルをパース
+                let mut temp_vec: Vec<RationalNumber> = Vec::new();
+                let mut dim = 0;
+                let mut start_idx = 3;
+                for i in 3..token_list.get_vec().len() {
+                    if token_list.get_token(i).get_word() == "," {
+                        let value = self.evaluate(token_list.get_slice(start_idx, i).get_vec());
+                        temp_vec.push(value);
+                        dim += 1;
+                        start_idx = i + 1;
+                    }
+                }
+                let value = self.evaluate(token_list.get_slice(start_idx, token_list.get_vec().len()).get_vec());
+
+                // 変数リストに入れる
+                let mut vec = NumericalVector::new(dim);
+                for i in 0..dim {
+                    vec.set_value(i, value);
+                }
+                self.variables.insert(name.clone(), Variable::Vector(vec));
+
+                
 
             } else {
                 // 何も当てはまらない場合はとりあえずそのまま出す
