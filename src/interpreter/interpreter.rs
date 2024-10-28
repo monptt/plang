@@ -14,8 +14,13 @@ use crate::object::number::value::Value;
 
 use crate::object::number::integer::Integer;
 
+#[derive(Clone, Copy)]
+enum Variable {
+    Number(RationalNumber)
+}
+
 pub struct Interpreter {
-    variables: HashMap<String, Rc<RationalNumber>>,
+    variables: HashMap<String, Rc<Variable>>,
 }
 
 impl Interpreter {
@@ -38,8 +43,11 @@ impl Interpreter {
                 // 変数宣言
                 let variable_name = &*token_list.get_token(1).get_word().clone();
                 let value: RationalNumber = self.evaluate(&token_list.get_vec()[3..].to_vec());
+
+                let variable_value = Variable::Number(value);
+
                 self.variables
-                    .insert(variable_name.to_string(), Rc::new(value));
+                    .insert(variable_name.to_string(), Rc::new(variable_value));
 
                 output.push_str(&String::from(format!("{}=", variable_name)));
                 for token in token_list.get_vec()[3..].to_vec() {
@@ -75,7 +83,12 @@ impl Interpreter {
 
             if self.variables.contains_key(token.get_word()) {
                 // 変数の場合
-                return **self.variables.get(token.get_word()).unwrap();
+                let value = **self.variables.get(token.get_word()).unwrap();
+                match value {
+                    Variable::Number(num) => {
+                        return num;
+                    }
+                }
             } else {
                 // 数値の場合
                 return RationalNumber::from(&tokens[0].to_integer());
