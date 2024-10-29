@@ -110,18 +110,7 @@ impl Interpreter {
 
             if self.variables.contains_key(token.get_word()) {
                 // 変数の場合
-                let value = self.variables.get(token.get_word()).unwrap();
-                match value {
-                    Value::Number(num) => {
-                        return *num;
-                    }
-                    Value::Vector(vec) => {
-                        return RationalNumber::from(0);
-                    }
-                    Value::Integer(num) => {
-                        return RationalNumber::from(0);
-                    }
-                }
+                return self.eval_variable(token.get_word());
             } else {
                 // 数値の場合
                 return RationalNumber::from(&tokens[0].to_integer());
@@ -188,5 +177,20 @@ impl Interpreter {
 
         // 最後まで来てしまったら0を返しておく
         return RationalNumber::from(&Integer { value: 0 });
+    }
+
+    fn eval_variable(&self, name: &String) -> RationalNumber {
+        let value = self.variables.get(name).unwrap();
+        match value {
+            Value::Number(num) => {
+                return *num;
+            }
+            Value::Vector(vec) => {
+                return RationalNumber::from(0);
+            }
+            Value::Integer(num) => {
+                return RationalNumber::from(0);
+            }
+        }
     }
 }
