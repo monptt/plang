@@ -118,6 +118,9 @@ impl Interpreter {
                     Value::Vector(vec) => {
                         return RationalNumber::from(0);
                     }
+                    Value::Integer(num) => {
+                        return RationalNumber::from(0);
+                    }
                 }
             } else {
                 // 数値の場合
