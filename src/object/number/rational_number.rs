@@ -36,8 +36,6 @@ impl RationalNumber {
     }
 }
 
-impl Value for RationalNumber {}
-
 impl operation::Add for RationalNumber {
     fn add(self, rhs: Self) -> Self {
         return self + rhs;

@@ -43,8 +43,6 @@ impl fmt::Display for Integer {
     }
 }
 
-impl Value for Integer {}
-
 impl operation::Add for Integer {
     fn add(self, x: Self) -> Integer {
         return Integer {

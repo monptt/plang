@@ -16,14 +16,8 @@ use crate::object::number::integer::Integer;
 
 use crate::object::vector::vector::NumericalVector;
 
-#[derive(Clone)]
-enum Variable {
-    Number(RationalNumber),
-    Vector(NumericalVector)
-}
-
 pub struct Interpreter {
-    variables: HashMap<String, Variable>,
+    variables: HashMap<String, Value>,
 }
 
 impl Interpreter {
@@ -47,7 +41,7 @@ impl Interpreter {
                 let variable_name = &*token_list.get_token(1).get_word().clone();
                 let value: RationalNumber = self.evaluate(&token_list.get_vec()[3..].to_vec());
 
-                let variable_value = Variable::Number(value);
+                let variable_value = Value::Number(value);
 
                 self.variables
                     .insert(variable_name.to_string(), variable_value);
@@ -90,7 +84,7 @@ impl Interpreter {
                 for i in 0..dim {
                     vec.set_value(i, temp_vec[i]);
                 }
-                self.variables.insert(name.clone(), Variable::Vector(vec.clone()));
+                self.variables.insert(name.clone(), Value::Vector(vec.clone()));
 
                 output.push_str(&String::from(format!("{}={}", name, vec)));
 
@@ -118,10 +112,10 @@ impl Interpreter {
                 // 変数の場合
                 let value = self.variables.get(token.get_word()).unwrap();
                 match value {
-                    Variable::Number(num) => {
+                    Value::Number(num) => {
                         return *num;
                     }
-                    Variable::Vector(vec) => {
+                    Value::Vector(vec) => {
                         return RationalNumber::from(0);
                     }
                 }
