@@ -10,6 +10,13 @@ pub enum Token {
     Vec,
     // 記号
     Eq,
+    Plus,
+    Minus,
+    Mul,
+    Div,
+    BracketLeft,
+    BracketRight,
+    Comma,
     // それ以外
     Word(String),
 }
@@ -31,6 +38,27 @@ impl Token {
         if word == "=" {
             return Token::Eq;
         }
+        if word == "+" {
+            return Token::Plus;
+        }
+        if word == "-" {
+            return Token::Minus;
+        }
+        if word == "*" {
+            return Token::Mul;
+        }
+        if word == "/" {
+            return Token::Div;
+        }
+        if word == "(" {
+            return Token::BracketLeft;
+        }
+        if word == ")" {
+            return Token::BracketRight;
+        }
+        if word == "," {
+            return Token::Comma;
+        }
 
         // それ以外
         return Token::Word(word.clone());
@@ -51,6 +79,27 @@ impl Token {
             // 記号
             Token::Eq => {
                 return String::from("=");
+            }
+            Token::Plus => {
+                return String::from("+");
+            }
+            Token::Minus => {
+                return String::from("-");
+            }
+            Token::Mul => {
+                return String::from("*");
+            }
+            Token::Div => {
+                return String::from("/");
+            }
+            Token::BracketLeft => {
+                return String::from("(");
+            }
+            Token::BracketRight => {
+                return String::from(")");
+            }
+            Token::Comma => {
+                return String::from(",");
             }
             // それ以外
             Token::Word(word) => {

@@ -67,7 +67,7 @@ impl Interpreter {
                 let mut dim = 0;
                 let mut start_idx = 4;
                 for i in 4..token_list.get_vec().len()-1 {
-                    if token_list.get_token(i).get_word() == "," {
+                    if *token_list.get_token(i) == Token::Comma {
                         let value = self.evaluate(token_list.get_slice(start_idx, i).get_vec());
                         
                         temp_vec.push(value);
@@ -129,9 +129,9 @@ impl Interpreter {
         for i in (0..n).rev() {
             let token = &tokens[i];
 
-            if token.get_word() == ")" {
+            if *token == Token::BracketRight {
                 bracket_count += 1;
-            } else if token.get_word() == "(" {
+            } else if *token == Token::BracketLeft {
                 bracket_count -= 1;
             }
 
@@ -139,11 +139,11 @@ impl Interpreter {
                 continue;
             }
 
-            if token.get_word() == "+" {
+            if *token == Token::Plus {
                 let lhs = self.evaluate(&tokens[0..i].to_vec());
                 let rhs = self.evaluate(&tokens[i + 1..n].to_vec());
                 return lhs + rhs;
-            } else if token.get_word() == "-" {
+            } else if *token == Token::Minus {
                 let lhs = self.evaluate(&tokens[0..i].to_vec());
                 let rhs = self.evaluate(&tokens[i + 1..n].to_vec());
                 return lhs - rhs;
@@ -154,9 +154,9 @@ impl Interpreter {
         for i in (0..n).rev() {
             let token = &tokens[i];
 
-            if token.get_word() == ")" {
+            if *token == Token::BracketRight {
                 bracket_count += 1;
-            } else if token.get_word() == "(" {
+            } else if *token == Token::BracketLeft {
                 bracket_count -= 1;
             }
 
@@ -164,11 +164,11 @@ impl Interpreter {
                 continue;
             }
 
-            if token.get_word() == "*" {
+            if *token == Token::Mul {
                 let lhs = self.evaluate(&tokens[0..i].to_vec());
                 let rhs = self.evaluate(&tokens[i + 1..n].to_vec());
                 return lhs * rhs;
-            } else if token.get_word() == "/" {
+            } else if *token == Token::Div {
                 let lhs = self.evaluate(&tokens[0..i].to_vec());
                 let rhs = self.evaluate(&tokens[i + 1..n].to_vec());
                 return lhs / rhs;
