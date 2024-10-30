@@ -107,7 +107,6 @@ impl Interpreter {
 
         if n == 1 {
             let token = &tokens[0];
-
             if self.variables.contains_key(&token.get_word()) {
                 // 変数の場合
                 return self.eval_variable(&token.get_word());
@@ -118,7 +117,7 @@ impl Interpreter {
         }
 
         // 括弧に囲まれてる場合
-        if tokens[0].get_word() == "(" && tokens[tokens.len() - 1].get_word() == ")" {
+        if tokens[0] == Token::BracketLeft && tokens[tokens.len() - 1] == Token::BracketRight {
             return self.evaluate(&tokens[1..tokens.len() - 1].to_vec());
         }
 
