@@ -3,17 +3,21 @@ use std::fmt;
 use crate::object::number::integer::Integer;
 
 #[derive(Clone)]
-pub struct Token {
-    word: String,
+pub enum Token {
+    Word(String),
 }
 
 impl Token {
     pub fn new(word: &String) -> Token {
-        return Token { word: word.clone() };
+        return Token::Word(word.clone());
     }
 
     pub fn get_word(&self) -> &String {
-        return &self.word;
+        match self {
+            Token::Word(word) => {
+                return word;
+            }
+        }
     }
 
     pub fn to_integer(&self) -> Integer {
@@ -23,7 +27,7 @@ impl Token {
 
 impl fmt::Display for Token {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        return write!(f, "{}", self.word);
+        return write!(f, "{}", self.get_word());
     }
 }
 
