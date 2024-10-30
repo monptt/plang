@@ -5,17 +5,25 @@ use crate::object::number::integer::Integer;
 #[derive(Clone)]
 pub enum Token {
     Word(String),
+    Eq,
 }
 
 impl Token {
     pub fn new(word: &String) -> Token {
-        return Token::Word(word.clone());
+        if word == "=" {
+            return Token::Eq;
+        } else {
+            return Token::Word(word.clone());
+        }
     }
 
-    pub fn get_word(&self) -> &String {
+    pub fn get_word(&self) -> String {
         match self {
             Token::Word(word) => {
-                return word;
+                return word.clone();
+            }
+            Token::Eq => {
+                return String::from("=");
             }
         }
     }
@@ -76,10 +84,10 @@ impl TokenList {
         return &self.tokens.get(index).unwrap();
     }
 
-    pub fn get_slice(&self, begin: usize, end: usize) -> TokenList{
-        return TokenList{
-            tokens: self.tokens[begin..end].to_vec()
-        }
+    pub fn get_slice(&self, begin: usize, end: usize) -> TokenList {
+        return TokenList {
+            tokens: self.tokens[begin..end].to_vec(),
+        };
     }
 
     pub fn get_vec(&self) -> &Vec<Token> {

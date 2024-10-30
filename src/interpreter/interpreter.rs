@@ -108,9 +108,9 @@ impl Interpreter {
         if n == 1 {
             let token = &tokens[0];
 
-            if self.variables.contains_key(token.get_word()) {
+            if self.variables.contains_key(&token.get_word()) {
                 // 変数の場合
-                return self.eval_variable(token.get_word());
+                return self.eval_variable(&token.get_word());
             } else {
                 // 数値の場合
                 return RationalNumber::from(&tokens[0].to_integer());
