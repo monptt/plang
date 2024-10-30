@@ -78,6 +78,36 @@ impl From<i32> for RationalNumber {
     }
 }
 
+impl From<&String> for RationalNumber {
+    fn from(in_str: &String) -> Self {
+        let mut numerator: Integer = Integer::from(0);
+        let mut denominator: Integer = Integer::from(1);
+
+        // 小数点があったか
+        let mut is_decimal = false;
+
+
+        for c in in_str.chars() {
+            if "0123456789".contains(c) {
+                let digit: i32 = c.to_string().parse().unwrap();
+                numerator = numerator * Integer::from(10);
+                numerator = numerator + Integer::from(digit);
+
+                if is_decimal {
+                    denominator = denominator * Integer::from(10);
+                }
+            }else if c == '.' {
+                is_decimal = true;
+            }
+        }
+
+        return RationalNumber{
+            numerator: numerator,
+            denominator: denominator
+        };
+    }
+}
+
 impl ops::Add<RationalNumber> for RationalNumber {
     type Output = RationalNumber;
     fn add(self, rhs: RationalNumber) -> RationalNumber {

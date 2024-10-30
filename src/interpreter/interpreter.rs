@@ -194,7 +194,6 @@ impl Interpreter {
     }
 
     fn eval_number(in_str: &String) -> RationalNumber {
-        let num: i32 = in_str.parse().unwrap();
-        return RationalNumber::from(num);
+        return RationalNumber::from(in_str);
     }
 }
