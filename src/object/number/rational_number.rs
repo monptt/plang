@@ -101,10 +101,12 @@ impl From<&String> for RationalNumber {
             }
         }
 
-        return RationalNumber{
+        let ret_num = RationalNumber{
             numerator: numerator,
             denominator: denominator
         };
+
+        return RationalNumber::reduce(&ret_num);
     }
 }
 
