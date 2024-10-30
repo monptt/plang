@@ -34,8 +34,8 @@ impl Interpreter {
             // ここで行ごとに処理する
             let token_list = Box::new(tokenizer::TokenList::new(&line.to_string()));
 
-            if token_list.get_token(0).get_word() == "let"
-                && token_list.get_token(2).get_word() == "="
+            if *token_list.get_token(0) == Token::Let
+                && *token_list.get_token(2) == Token::Eq
             {
                 // 変数宣言
                 let variable_name = &*token_list.get_token(1).get_word().clone();
@@ -50,7 +50,7 @@ impl Interpreter {
                 for token in token_list.get_vec()[3..].to_vec() {
                     output.push_str(&String::from(format!("{}", token)));
                 }
-            } else if token_list.get_token(0).get_word() == "eval" {
+            } else if *token_list.get_token(0) == Token::Eval {
                 // 値を評価する
                 let value: &RationalNumber = &self.evaluate(&token_list.get_vec()[1..].to_vec());
 
@@ -58,7 +58,7 @@ impl Interpreter {
                     output.push_str(&String::from(format!("{}", token)));
                 }
                 output.push_str(&String::from(format!("={}", value)));
-            } else if token_list.get_token(0).get_word() == "vec" {
+            } else if *token_list.get_token(0) == Token::Vec {
                 // ベクトルを宣言する
                 let name = token_list.get_token(1).get_word();
 

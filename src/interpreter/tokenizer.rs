@@ -2,28 +2,59 @@ use std::fmt;
 
 use crate::object::number::integer::Integer;
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 pub enum Token {
-    Word(String),
+    // キーワード
+    Let,
+    Eval,
+    Vec,
+    // 記号
     Eq,
+    // それ以外
+    Word(String),
 }
 
 impl Token {
     pub fn new(word: &String) -> Token {
+        // キーワード
+        if word == "let" {
+            return Token::Let;
+        }
+        if word == "eval" {
+            return Token::Eval;
+        }
+        if word == "Vec" {
+            return Token::Vec;
+        }
+
+        // 記号
         if word == "=" {
             return Token::Eq;
-        } else {
-            return Token::Word(word.clone());
         }
+
+        // それ以外
+        return Token::Word(word.clone());
     }
 
     pub fn get_word(&self) -> String {
         match self {
-            Token::Word(word) => {
-                return word.clone();
+            // キーワード
+            Token::Let => {
+                return String::from("let");
             }
+            Token::Eval => {
+                return String::from("eval");
+            }
+            Token::Vec => {
+                return String::from("vec");
+            }
+            // 記号
             Token::Eq => {
                 return String::from("=");
+            }
+            // それ以外
+            Token::Word(word) => {
+                return word.clone();
             }
         }
     }
