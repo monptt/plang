@@ -113,7 +113,7 @@ impl Interpreter {
                 return self.eval_variable(&token.get_word());
             } else {
                 // 数値の場合
-                return RationalNumber::from(&tokens[0].to_integer());
+                return Self::eval_number(&token.get_word());
             }
         }
 
@@ -192,5 +192,10 @@ impl Interpreter {
                 return RationalNumber::from(0);
             }
         }
+    }
+
+    fn eval_number(in_str: &String) -> RationalNumber {
+        let num: i32 = in_str.parse().unwrap();
+        return RationalNumber::from(num);
     }
 }

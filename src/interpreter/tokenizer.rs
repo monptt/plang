@@ -58,10 +58,6 @@ impl Token {
             }
         }
     }
-
-    pub fn to_integer(&self) -> Integer {
-        return Integer::new(&self.get_word());
-    }
 }
 
 impl fmt::Display for Token {
