@@ -30,7 +30,7 @@ impl Token {
         if word == "eval" {
             return Token::Eval;
         }
-        if word == "Vec" {
+        if word == "vec" {
             return Token::Vec;
         }
 
