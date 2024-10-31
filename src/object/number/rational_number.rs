@@ -34,6 +34,13 @@ impl RationalNumber {
             denominator: x.denominator / gcd,
         };
     }
+
+    fn abs(x: &RationalNumber) -> RationalNumber {
+        return RationalNumber {
+            numerator: Integer::abs(x.numerator),
+            denominator: Integer::abs(x.denominator)
+        };
+    }
 }
 
 impl operation::Add for RationalNumber {
