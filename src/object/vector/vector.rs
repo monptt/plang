@@ -1,4 +1,3 @@
-use std::collections::btree_map::Range;
 use std::ops;
 use std::cmp;
 use std::fmt;
@@ -19,7 +18,7 @@ impl NumericalVector {
             vec: Vec::with_capacity(dim),
         };
 
-        for i in 0..dim {
+        for _ in 0..dim {
             let value_zero = RationalNumber::from(0);
             ret_vec.vec.push(value_zero);
         }

@@ -1,9 +1,6 @@
 use super::tokenizer::{self, Token};
 
-use std::collections::btree_map::Range;
 use std::collections::HashMap;
-use std::hash::Hash;
-use std::rc::Rc;
 
 use crate::object::number::operation::Add;
 use crate::object::number::operation::Div;
@@ -188,7 +185,7 @@ impl Interpreter {
                 return RationalNumber::from(0);
             }
             Value::Integer(num) => {
-                return RationalNumber::from(0);
+                return RationalNumber::from(num);
             }
         }
     }

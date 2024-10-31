@@ -17,6 +17,10 @@ impl Integer {
     }
 
     pub fn gcd(a: Integer, b: Integer) -> Integer {
+        if a.value < 0 || b.value < 0 {
+            return Self::gcd(Self::abs(a), Self::abs(b));
+        }
+
         if a.value < b.value {
             return Self::gcd(b, a);
         } else {
@@ -25,6 +29,14 @@ impl Integer {
             } else {
                 return Self::gcd(b, a % b);
             }
+        }
+    }
+
+    pub fn abs(x: Integer) -> Integer {
+        if x.value >= 0 {
+            return x;
+        } else {
+            return Integer::from(-1) * x;
         }
     }
 }
@@ -126,6 +138,13 @@ impl cmp::PartialEq for Integer {
         return self.value == other.value;
     }
 }
+
+impl From<i32> for Integer {
+    fn from(value: i32) -> Self {
+        return Integer { value: value };
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::object::number::integer::Integer;
@@ -134,10 +153,11 @@ mod tests {
     fn test_integer_eq() {
         assert!(Integer { value: 1 } == Integer { value: 1 });
     }
-}
 
-impl From<i32> for Integer {
-    fn from(value: i32) -> Self {
-        return Integer { value: value };
+    #[test]
+    fn test_integer_abs() {
+        assert!(Integer::abs(Integer::from(2)) == Integer::from(2));
+        assert!(Integer::abs(Integer::from(0)) == Integer::from(0));
+        assert!(Integer::abs(Integer::from(-5)) == Integer::from(5));
     }
 }
