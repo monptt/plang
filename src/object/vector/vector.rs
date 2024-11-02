@@ -59,7 +59,7 @@ impl fmt::Display for NumericalVector {
             }
             str += &self.vec[i].to_string();
         }
-        return write!(f, "[{}]_{{\\in \\mathbb{{R}} ^ {} }}", str, self.dimension);
+        return write!(f, "[{}]_{{\\in \\mathbb{{R}} ^ {{ {} }} }}", str, self.dimension);
     }
 }
 
