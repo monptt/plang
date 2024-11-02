@@ -1,3 +1,5 @@
+use core::fmt;
+
 use crate::object::number::{integer::Integer, rational_number::RationalNumber};
 
 use super::function::Function;
@@ -25,6 +27,18 @@ impl Function for Monomial {
         }
 
         return ret_value;
+    }
+}
+
+impl fmt::Display for Monomial {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        if self.degree == Integer::from(0) {
+            return write!(f, "{}", self.coefficient);
+        } else if self.degree == Integer::from(1) {
+            return write!(f, "{} x", self.coefficient);
+        } else {
+            return write!(f, "{} x ^ {{ {} }}", self.coefficient, self.degree);
+        }
     }
 }
 

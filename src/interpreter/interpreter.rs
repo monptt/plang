@@ -74,14 +74,39 @@ impl Interpreter {
         let function_name = SymbolName::FunctionName(token_list.get_token(1).get_word());
 
         let func_token_list = token_list.get_slice(3, token_list.get_length());
-        Interpreter::parse_function(token_list);
+        
+        let func = Box::new(self.parse_function(&func_token_list));
+        self.functions.insert(function_name, func);
 
         // 出力
         self.output.push_str("function");
     }
 
-    fn parse_function(token_list: &TokenList) -> Monomial {
+    fn parse_function(&self, token_list: &TokenList) -> Monomial {
         let arg_char = "x";
+
+        if token_list.get_length() == 1 {
+            //todo: 実装
+        }
+
+        if *token_list.get_token(1) == Token::Pow {
+            //todo: 実装
+        }
+
+        for i in (0..token_list.get_length()).rev() {
+            let token = token_list.get_token(i);
+
+            // +,-を処理
+            if *token == Token::Plus {
+                let lhs = self.parse_function(&token_list.get_slice(0, i));
+                let rhs = self.parse_function(&token_list.get_slice(i+1, token_list.get_length()));
+                return lhs; // + rhs; //todo: 実装
+            } else if *token == Token::Minus {
+                let lhs = self.parse_function(&token_list.get_slice(0, i));
+                let rhs = self.parse_function(&token_list.get_slice(i+1, token_list.get_length()));
+                return lhs; // - rhs; //todo: 実装
+            }
+        }
         return  Monomial::new(RationalNumber::from(1), Integer::from(0));
     }
 
