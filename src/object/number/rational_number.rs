@@ -1,4 +1,5 @@
 use super::integer::Integer;
+use super::value::AsValue;
 
 use std::cmp;
 use std::ops;
@@ -38,8 +39,14 @@ impl RationalNumber {
     fn abs(x: &RationalNumber) -> RationalNumber {
         return RationalNumber {
             numerator: Integer::abs(x.numerator),
-            denominator: Integer::abs(x.denominator)
+            denominator: Integer::abs(x.denominator),
         };
+    }
+}
+
+impl AsValue for RationalNumber {
+    fn as_value(&self) -> Value {
+        return Value::Number(*self);
     }
 }
 
@@ -80,8 +87,8 @@ impl From<i32> for RationalNumber {
     fn from(x: i32) -> RationalNumber {
         return RationalNumber {
             numerator: Integer::from(x),
-            denominator: Integer::from(1)
-        }
+            denominator: Integer::from(1),
+        };
     }
 }
 
@@ -93,7 +100,6 @@ impl From<&String> for RationalNumber {
         // 小数点があったか
         let mut is_decimal = false;
 
-
         for c in in_str.chars() {
             if "0123456789".contains(c) {
                 let digit: i32 = c.to_string().parse().unwrap();
@@ -103,14 +109,14 @@ impl From<&String> for RationalNumber {
                 if is_decimal {
                     denominator = denominator * Integer::from(10);
                 }
-            }else if c == '.' {
+            } else if c == '.' {
                 is_decimal = true;
             }
         }
 
-        let ret_num = RationalNumber{
+        let ret_num = RationalNumber {
             numerator: numerator,
-            denominator: denominator
+            denominator: denominator,
         };
 
         return RationalNumber::reduce(&ret_num);
@@ -173,7 +179,10 @@ mod tests {
 
     #[test]
     fn test_rational_number_eq() {
-        assert!(RationalNumber::new(Integer::from(1), Integer::from(2)) == RationalNumber::new(Integer::from(2), Integer::from(4)));
+        assert!(
+            RationalNumber::new(Integer::from(1), Integer::from(2))
+                == RationalNumber::new(Integer::from(2), Integer::from(4))
+        );
     }
 }
 

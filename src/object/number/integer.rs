@@ -1,3 +1,4 @@
+use super::value::AsValue;
 use super::{super::object::ObjectTrait, value::Value};
 use super::{operation, value};
 use std::cmp;
@@ -46,6 +47,12 @@ impl ObjectTrait for Integer {
         let value = self.value;
         let str = value.to_string();
         return str;
+    }
+}
+
+impl AsValue for Integer {
+    fn as_value(&self) -> Value {
+        return Value::Integer(*self);
     }
 }
 

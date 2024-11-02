@@ -11,3 +11,7 @@ pub enum Value {
     Integer(Integer),
     Vector(NumericalVector)
 }
+
+pub trait AsValue {
+    fn as_value(&self) -> Value;
+}
