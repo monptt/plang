@@ -4,6 +4,7 @@ use crate::object::number::{integer::Integer, rational_number::RationalNumber};
 
 use super::function::Function;
 
+#[derive(Clone)]
 pub struct Monomial {
     pub coefficient: RationalNumber, // 係数
     pub degree: Integer,             // 次数
@@ -35,9 +36,17 @@ impl fmt::Display for Monomial {
         if self.degree == Integer::from(0) {
             return write!(f, "{}", self.coefficient);
         } else if self.degree == Integer::from(1) {
-            return write!(f, "{} x", self.coefficient);
+            if self.coefficient == RationalNumber::from(1) {
+                return write!(f, "x");
+            } else {
+                return write!(f, "{} x", self.coefficient);
+            }
         } else {
-            return write!(f, "{} x ^ {{ {} }}", self.coefficient, self.degree);
+            if self.coefficient == RationalNumber::from(1) {
+                return write!(f, "x ^ {{ {} }}", self.degree);
+            } else {
+                return write!(f, "{} x ^ {{ {} }}", self.coefficient, self.degree);
+            }
         }
     }
 }
@@ -46,8 +55,8 @@ impl fmt::Display for Monomial {
 mod tests {
     use crate::object::number::{integer::Integer, rational_number::RationalNumber};
 
-    use super::Monomial;
     use super::Function;
+    use super::Monomial;
 
     #[test]
     fn test_monomial() {

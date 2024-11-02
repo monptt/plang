@@ -75,22 +75,29 @@ impl Interpreter {
 
         let func_token_list = token_list.get_slice(3, token_list.get_length());
         
-        let func = Box::new(self.parse_function(&func_token_list));
-        self.functions.insert(function_name, func);
+        let func = self.parse_function(&func_token_list);
+        self.functions.insert(function_name.clone(), Box::new(func.clone()));
 
         // 出力
-        self.output.push_str("function");
+        self.output.push_str(&String::from(format!("{}={}", function_name, func)));
     }
 
     fn parse_function(&self, token_list: &TokenList) -> Monomial {
         let arg_char = "x";
 
         if token_list.get_length() == 1 {
-            //todo: 実装
+            let token = token_list.get_token(0);
+            if token.get_word() == arg_char {
+                return Monomial::new(RationalNumber::from(1), Integer::from(1));
+            } else {
+                let num = Interpreter::eval_number(&token.get_word());
+                return Monomial::new(num, Integer::from(0));
+            }
         }
 
-        if *token_list.get_token(1) == Token::Pow {
-            //todo: 実装
+        if token_list.get_length() == 3 && *token_list.get_token(1) == Token::Pow {
+            let degree = Interpreter::eval_number(&token_list.get_token(2).get_word());
+            return Monomial::new(RationalNumber::from(1), degree.numerator);
         }
 
         for i in (0..token_list.get_length()).rev() {
@@ -107,7 +114,7 @@ impl Interpreter {
                 return lhs; // - rhs; //todo: 実装
             }
         }
-        return  Monomial::new(RationalNumber::from(1), Integer::from(0));
+        return Monomial::new(RationalNumber::from(1), Integer::from(0));
     }
 
     fn assign_variable(&mut self, token_list: &TokenList){
@@ -256,17 +263,32 @@ impl Interpreter {
 
 #[cfg(test)]
 mod tests{
+    use crate::object::function::function::Function;
+    use crate::object::function::monomial::Monomial;
+    use crate::object::number::integer::Integer;
     use crate::object::number::rational_number::RationalNumber;
     use super::Interpreter;
     use super::super::symbol::SymbolName;
 
     #[test]
-    fn test_variable_assign(){
+    fn test_variable_assign() {
         let mut interpreter = Interpreter::new();
         interpreter.interpret("let x = 1");
 
         let value = interpreter.eval_variable(&SymbolName::VariableName(String::from("x")));
         let expected_value = RationalNumber::from(1);
         assert!(value == expected_value);
+    }
+
+    #[test]
+    fn test_function_assign() {
+        let mut interpreter = Interpreter::new();
+        interpreter.interpret("func f = x");
+        
+        let func = interpreter.functions.get(&SymbolName::FunctionName(String::from("f"))).unwrap();
+        let expected_func = Monomial::new(RationalNumber::from(1), Integer::from(1));
+
+        let arg = RationalNumber::from(3);
+        assert!(func.calc(arg) == expected_func.calc(arg));
     }
 }

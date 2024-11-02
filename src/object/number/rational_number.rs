@@ -17,8 +17,8 @@ use std::fmt;
 
 #[derive(Clone, Copy)]
 pub struct RationalNumber {
-    numerator: Integer,
-    denominator: Integer,
+    pub numerator: Integer,
+    pub denominator: Integer,
 }
 
 impl RationalNumber {
