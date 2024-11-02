@@ -21,3 +21,7 @@ impl Function for Polynomial {
         return ret_value;
     }
 }
+
+impl Polynomial {
+
+}

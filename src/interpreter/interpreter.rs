@@ -15,6 +15,7 @@ use crate::object::number::integer::Integer;
 use crate::object::vector::vector::NumericalVector;
 
 use crate::object::function::function::Function;
+use crate::object::function::monomial::Monomial;
 
 pub struct Interpreter {
     variables: HashMap<SymbolName, Value>,
@@ -76,8 +77,9 @@ impl Interpreter {
         Interpreter::parse_function(token_list);
     }
 
-    fn parse_function(token_list: &TokenList) {
+    fn parse_function(token_list: &TokenList) -> Monomial {
         let arg_char = "x";
+        return  Monomial::new(RationalNumber::from(1), Integer::from(0));
     }
 
     fn assign_variable(&mut self, token_list: &TokenList){
