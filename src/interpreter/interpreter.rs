@@ -41,14 +41,14 @@ impl Interpreter {
                 let value: RationalNumber = self.evaluate(&token_list.get_vec()[3..].to_vec());
 
                 let variable_value = Value::Number(value);
+                self.assign_variable(&variable_name, &variable_value);
 
-                self.variables
-                    .insert(variable_name.clone(), variable_value);
-
+                // 出力
                 self.output.push_str(&String::from(format!("{}=", variable_name)));
                 for token in token_list.get_vec()[3..].to_vec() {
                     self.output.push_str(&String::from(format!("{}", token)));
                 }
+
             } else if *token_list.get_token(0) == Token::Eval {
                 // 値を評価する
                 let value: &RationalNumber = &self.evaluate(&token_list.get_vec()[1..].to_vec());
@@ -67,6 +67,10 @@ impl Interpreter {
             self.output.push_str("\n");
         }
         return self.output.clone();
+    }
+
+    fn assign_variable(&mut self, variable_name: &SymbolName, value: &Value){
+        self.variables.insert(variable_name.clone(), value.clone());
     }
 
     fn evaluate(&self, tokens: &Vec<Token>) -> RationalNumber {
