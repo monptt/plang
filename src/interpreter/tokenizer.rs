@@ -8,6 +8,7 @@ pub enum Token {
     Let,
     Eval,
     Vec,
+    Func,
     // 記号
     Eq,
     Plus,
@@ -32,6 +33,9 @@ impl Token {
         }
         if word == "vec" {
             return Token::Vec;
+        }
+        if word == "func" {
+            return Token::Func;
         }
 
         // 記号
@@ -74,6 +78,9 @@ impl Token {
                 return String::from("eval");
             }
             Token::Vec => {
+                return String::from("vec");
+            }
+            Token::Func => {
                 return String::from("vec");
             }
             // 記号

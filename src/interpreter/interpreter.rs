@@ -33,7 +33,9 @@ impl Interpreter {
             // ここで行ごとに処理する
             let token_list = tokenizer::TokenList::new(&line.to_string());
 
-            if *token_list.get_token(0) == Token::Let
+            let first_token = token_list.get_token(0);
+
+            if *first_token == Token::Let
                 && *token_list.get_token(2) == Token::Eq
             {
                 // 変数宣言
@@ -48,8 +50,7 @@ impl Interpreter {
                 for token in token_list.get_vec()[3..].to_vec() {
                     self.output.push_str(&String::from(format!("{}", token)));
                 }
-
-            } else if *token_list.get_token(0) == Token::Eval {
+            } else if *first_token == Token::Eval {
                 // 値を評価する
                 let value: &RationalNumber = &self.evaluate(&token_list.get_vec()[1..].to_vec());
 
@@ -57,9 +58,12 @@ impl Interpreter {
                     self.output.push_str(&String::from(format!("{}", token)));
                 }
                 self.output.push_str(&String::from(format!("={}", value)));
-            } else if *token_list.get_token(0) == Token::Vec {
+            } else if *first_token == Token::Vec {
                 self.parse_vector(&token_list);
-            } else {
+            }else if *first_token == Token::Func {
+                // 関数宣言
+            }
+             else {
                 // 何も当てはまらない場合はとりあえずそのまま出す
                 self.output.push_str(line);
             }
