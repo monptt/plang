@@ -1,5 +1,5 @@
-use super::operation;
 use super::{super::object::ObjectTrait, value::Value};
+use super::{operation, value};
 use std::cmp;
 use std::fmt;
 use std::ops;
@@ -145,6 +145,19 @@ impl From<i32> for Integer {
     }
 }
 
+impl From<&String> for Integer {
+    fn from(in_str: &String) -> Self {
+        let mut value = 0;
+        for c in in_str.chars() {
+            if "0123456789".contains(c) {
+                let digit: i32 = c.to_string().parse().unwrap();
+                value = value * 10 + digit;
+            }
+        }
+        return Integer::from(value);
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::object::number::integer::Integer;
@@ -159,5 +172,10 @@ mod tests {
         assert!(Integer::abs(Integer::from(2)) == Integer::from(2));
         assert!(Integer::abs(Integer::from(0)) == Integer::from(0));
         assert!(Integer::abs(Integer::from(-5)) == Integer::from(5));
+    }
+
+    #[test]
+    fn test_integer_from_string() {
+        assert!(Integer::from(&String::from("765")) == Integer::from(765));
     }
 }
