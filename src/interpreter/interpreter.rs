@@ -61,7 +61,7 @@ impl Interpreter {
                 // 関数の値を計算
                 let func_name = SymbolName::FunctionName(token_list.get_token(1).get_word());
                 let func = self.functions.get(&func_name).unwrap();
-                let arg = Interpreter::eval_number(&token_list.get_token(3).get_word());
+                let arg = Interpreter::eval_number(&token_list.get_token(3));
                 let result = func.calc(arg);
                 // 出力
                 self.output.push_str(&String::from(format!("{} ( {} ) = {}", func_name, arg, result)));
@@ -97,13 +97,13 @@ impl Interpreter {
             if token.get_word() == arg_char {
                 return Monomial::new(RationalNumber::from(1), Integer::from(1));
             } else {
-                let num = Interpreter::eval_number(&token.get_word());
+                let num = Interpreter::eval_number(&token);
                 return Monomial::new(num, Integer::from(0));
             }
         }
 
         if token_list.get_length() == 3 && *token_list.get_token(1) == Token::Pow {
-            let degree = Interpreter::eval_number(&token_list.get_token(2).get_word());
+            let degree = Interpreter::eval_number(&token_list.get_token(2));
             return Monomial::new(RationalNumber::from(1), degree.numerator);
         }
 
@@ -158,7 +158,7 @@ impl Interpreter {
                 return self.eval_variable(&SymbolName::VariableName(token.get_word()));
             } else {
                 // 数値の場合
-                return Self::eval_number(&token.get_word());
+                return Self::eval_number(&token);
             }
         }
 
@@ -239,8 +239,8 @@ impl Interpreter {
         }
     }
 
-    fn eval_number(in_str: &String) -> RationalNumber {
-        return RationalNumber::from(in_str);
+    fn eval_number(in_token: &Token) -> RationalNumber {
+        return RationalNumber::from(&in_token.get_word());
     }
 
     fn parse_vector(&mut self, token_list: &TokenList) {
