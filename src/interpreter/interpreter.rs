@@ -75,6 +75,9 @@ impl Interpreter {
 
         let func_token_list = token_list.get_slice(3, token_list.get_length());
         Interpreter::parse_function(token_list);
+
+        // 出力
+        self.output.push_str("function");
     }
 
     fn parse_function(token_list: &TokenList) -> Monomial {

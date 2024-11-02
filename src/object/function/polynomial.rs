@@ -8,7 +8,7 @@ struct Polynomial {
 }
 
 impl Function for Polynomial {
-    fn map(&self, x: RationalNumber) -> RationalNumber {
+    fn calc(&self, x: RationalNumber) -> RationalNumber {
         let mut ret_value = RationalNumber::from(0);
 
         let mut temp_pow = RationalNumber::from(1);
