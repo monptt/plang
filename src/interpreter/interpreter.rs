@@ -1,3 +1,4 @@
+use super::symbol::SymbolName;
 use super::tokenizer::TokenList;
 use super::tokenizer::{self, Token};
 
@@ -15,7 +16,7 @@ use crate::object::number::integer::Integer;
 use crate::object::vector::vector::NumericalVector;
 
 pub struct Interpreter {
-    variables: HashMap<String, Value>,
+    variables: HashMap<SymbolName, Value>,
     output: String
 }
 
@@ -36,13 +37,13 @@ impl Interpreter {
                 && *token_list.get_token(2) == Token::Eq
             {
                 // 変数宣言
-                let variable_name = &*token_list.get_token(1).get_word().clone();
+                let variable_name = SymbolName::VariableName(token_list.get_token(1).get_word());
                 let value: RationalNumber = self.evaluate(&token_list.get_vec()[3..].to_vec());
 
                 let variable_value = Value::Number(value);
 
                 self.variables
-                    .insert(variable_name.to_string(), variable_value);
+                    .insert(variable_name.clone(), variable_value);
 
                 self.output.push_str(&String::from(format!("{}=", variable_name)));
                 for token in token_list.get_vec()[3..].to_vec() {
@@ -77,9 +78,9 @@ impl Interpreter {
 
         if n == 1 {
             let token = &tokens[0];
-            if self.variables.contains_key(&token.get_word()) {
+            if self.variables.contains_key(&SymbolName::VariableName(token.get_word())) {
                 // 変数の場合
-                return self.eval_variable(&token.get_word());
+                return self.eval_variable(&SymbolName::VariableName(token.get_word()));
             } else {
                 // 数値の場合
                 return Self::eval_number(&token.get_word());
@@ -148,7 +149,7 @@ impl Interpreter {
         return RationalNumber::from(&Integer { value: 0 });
     }
 
-    fn eval_variable(&self, name: &String) -> RationalNumber {
+    fn eval_variable(&self, name: &SymbolName) -> RationalNumber {
         let value = self.variables.get(name).unwrap();
         match value {
             Value::Number(num) => {
@@ -169,7 +170,7 @@ impl Interpreter {
 
     fn parse_vector(&mut self, token_list: &TokenList) {
         // ベクトルを宣言する
-        let name = token_list.get_token(1).get_word();
+        let name = SymbolName::VariableName(token_list.get_token(1).get_word()) ;
 
         // ベクトルをパース
         let mut temp_vec: Vec<RationalNumber> = Vec::new();
