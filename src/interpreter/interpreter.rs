@@ -210,3 +210,20 @@ impl Interpreter {
         self.output.push_str(&String::from(format!("{}={}", name, vec)));
     }
 }
+
+#[cfg(test)]
+mod tests{
+    use crate::object::number::rational_number::RationalNumber;
+    use super::Interpreter;
+    use super::super::symbol::SymbolName;
+
+    #[test]
+    fn test_variable_assign(){
+        let mut interpreter = Interpreter::new();
+        interpreter.interpret("let x = 1");
+
+        let value = interpreter.eval_variable(&SymbolName::VariableName(String::from("x")));
+        let expected_value = RationalNumber::from(1);
+        assert!(value == expected_value);
+    }
+}
