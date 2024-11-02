@@ -1,6 +1,6 @@
-use crate::object::number::rational_number::RationalNumber;
+use crate::object::number::{integer::Integer, rational_number::RationalNumber};
 
-use super::function::Function;
+use super::{function::Function, monomial::Monomial};
 
 // 多項式関数
 struct Polynomial {
@@ -23,5 +23,24 @@ impl Function for Polynomial {
 }
 
 impl Polynomial {
+    fn new(coefficients: Vec<RationalNumber>) -> Polynomial {
+        return Polynomial {
+            coefficients: coefficients,
+        };
+    }
+}
 
+impl From<&Monomial> for Polynomial {
+    fn from(monomial: &Monomial) -> Polynomial {
+        let mut coefficients: Vec<RationalNumber> = Vec::new();
+        for i in 0..monomial.degree.value + 1 {
+            if i == monomial.degree.value {
+                coefficients.push(monomial.coefficient);
+            } else {
+                coefficients.push(RationalNumber::from(0));
+            }
+        }
+
+        return Polynomial::new(coefficients);
+    }
 }
