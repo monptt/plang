@@ -12,11 +12,13 @@ use crate::object::number::rational_number::RationalNumber;
 use crate::object::number::value::Value;
 
 use crate::object::number::integer::Integer;
-
 use crate::object::vector::vector::NumericalVector;
+
+use crate::object::function::function::Function;
 
 pub struct Interpreter {
     variables: HashMap<SymbolName, Value>,
+    functions: HashMap<SymbolName, Box<dyn Function>>,
     output: String
 }
 
@@ -24,6 +26,7 @@ impl Interpreter {
     pub fn new() -> Interpreter {
         return Interpreter {
             variables: HashMap::new(),
+            functions: HashMap::new(),
             output: String::from("")
         };
     }
@@ -39,17 +42,7 @@ impl Interpreter {
                 && *token_list.get_token(2) == Token::Eq
             {
                 // 変数宣言
-                let variable_name = SymbolName::VariableName(token_list.get_token(1).get_word());
-                let value: RationalNumber = self.evaluate(&token_list.get_vec()[3..].to_vec());
-
-                let variable_value = Value::Number(value);
-                self.assign_variable(&variable_name, &variable_value);
-
-                // 出力
-                self.output.push_str(&String::from(format!("{}=", variable_name)));
-                for token in token_list.get_vec()[3..].to_vec() {
-                    self.output.push_str(&String::from(format!("{}", token)));
-                }
+                self.assign_variable(&token_list);
             } else if *first_token == Token::Eval {
                 // 値を評価する
                 let value: &RationalNumber = &self.evaluate(&token_list.get_vec()[1..].to_vec());
@@ -62,6 +55,7 @@ impl Interpreter {
                 self.parse_vector(&token_list);
             }else if *first_token == Token::Func {
                 // 関数宣言
+                let function_name = SymbolName::FunctionName(token_list.get_token(1).get_word());
             }
              else {
                 // 何も当てはまらない場合はとりあえずそのまま出す
@@ -73,8 +67,17 @@ impl Interpreter {
         return self.output.clone();
     }
 
-    fn assign_variable(&mut self, variable_name: &SymbolName, value: &Value){
-        self.variables.insert(variable_name.clone(), value.clone());
+    fn assign_variable(&mut self, token_list: &TokenList){
+        let variable_name = SymbolName::VariableName(token_list.get_token(1).get_word());
+        let variable_value = Value::Number(self.evaluate(&token_list.get_vec()[3..].to_vec()));
+
+        self.variables.insert(variable_name.clone(), variable_value.clone());
+
+        // 出力
+        self.output.push_str(&String::from(format!("{}=", variable_name)));
+        for token in token_list.get_vec()[3..].to_vec() {
+            self.output.push_str(&String::from(format!("{}", token)));
+        }
     }
 
     fn evaluate(&self, tokens: &Vec<Token>) -> RationalNumber {
