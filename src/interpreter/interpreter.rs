@@ -19,7 +19,7 @@ use crate::object::function::monomial::Monomial;
 
 pub struct Interpreter {
     variables: HashMap<SymbolName, Value>,
-    functions: HashMap<SymbolName, Box<dyn FunctionTrait>>,
+    functions: HashMap<SymbolName, Function>,
     output: String,
 }
 
@@ -80,31 +80,31 @@ impl Interpreter {
 
         let func_token_list = token_list.get_slice(3, token_list.get_length());
 
-        let func = self.parse_function(&func_token_list);
+        let func: Function = self.parse_function(&func_token_list);
         self.functions
-            .insert(function_name.clone(), Box::new(func.clone()));
+            .insert(function_name.clone(), func.clone());
 
         // 出力
         self.output
             .push_str(&String::from(format!("{}={}", function_name, func)));
     }
 
-    fn parse_function(&self, token_list: &TokenList) -> Monomial {
+    fn parse_function(&self, token_list: &TokenList) -> Function {
         let arg_char = "x";
 
         if token_list.get_length() == 1 {
             let token = token_list.get_token(0);
             if token.get_word() == arg_char {
-                return Monomial::new(RationalNumber::from(1), Integer::from(1));
+                return Function::Monomial(Monomial::new(RationalNumber::from(1), Integer::from(1)));
             } else {
                 let num = Interpreter::eval_number(&token);
-                return Monomial::new(num, Integer::from(0));
+                return Function::Monomial(Monomial::new(num, Integer::from(0)));
             }
         }
 
         if token_list.get_length() == 3 && *token_list.get_token(1) == Token::Pow {
             let degree = Interpreter::eval_number(&token_list.get_token(2));
-            return Monomial::new(RationalNumber::from(1), degree.numerator);
+            return Function::Monomial(Monomial::new(RationalNumber::from(1), degree.numerator));
         }
 
         for i in (0..token_list.get_length()).rev() {
@@ -123,7 +123,7 @@ impl Interpreter {
                 return lhs; // - rhs; //todo: 実装
             }
         }
-        return Monomial::new(RationalNumber::from(1), Integer::from(0));
+        return Function::Monomial(Monomial::new(RationalNumber::from(1), Integer::from(0)));
     }
 
     fn assign_variable(&mut self, token_list: &TokenList) {
@@ -285,6 +285,7 @@ impl Interpreter {
 mod tests {
     use super::super::symbol::SymbolName;
     use super::Interpreter;
+    use crate::object::function::function::Function;
     use crate::object::function::function::FunctionTrait;
     use crate::object::function::monomial::Monomial;
     use crate::object::number::integer::Integer;

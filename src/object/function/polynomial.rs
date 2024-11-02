@@ -1,3 +1,4 @@
+use core::fmt;
 use std::{cmp::max, ops};
 
 use crate::object::number::{integer::Integer, rational_number::RationalNumber};
@@ -5,7 +6,8 @@ use crate::object::number::{integer::Integer, rational_number::RationalNumber};
 use super::{function::{Function, FunctionTrait}, monomial::Monomial};
 
 // 多項式関数
-struct Polynomial {
+#[derive(Clone)]
+pub struct Polynomial {
     coefficients: Vec<RationalNumber>,
 }
 
@@ -68,5 +70,11 @@ impl ops::Add for Polynomial {
         }
 
         return Polynomial::new(ret_coefficients);
+    }
+}
+
+impl fmt::Display for Polynomial {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        return write!(f, "");
     }
 }
