@@ -45,17 +45,19 @@ impl Interpreter {
                 self.assign_variable(&token_list);
             } else if *first_token == Token::Eval {
                 // 値を評価する
+                let eval_token_list = token_list.get_slice(1, token_list.get_length());
+
                 let value: &RationalNumber = &self.evaluate(&token_list.get_vec()[1..].to_vec());
 
                 for token in token_list.get_vec()[1..].to_vec() {
                     self.output.push_str(&String::from(format!("{}", token)));
                 }
                 self.output.push_str(&String::from(format!("={}", value)));
-            } else if *first_token == Token::Vec {
+            } else if *first_token == Token::Vec && *token_list.get_token(2) == Token::Eq {
                 self.parse_vector(&token_list);
-            }else if *first_token == Token::Func {
+            }else if *first_token == Token::Func && *token_list.get_token(2) == Token::Eq {
                 // 関数宣言
-                let function_name = SymbolName::FunctionName(token_list.get_token(1).get_word());
+                self.assign_function(&token_list);
             }
              else {
                 // 何も当てはまらない場合はとりあえずそのまま出す
@@ -65,6 +67,17 @@ impl Interpreter {
             self.output.push_str("\n");
         }
         return self.output.clone();
+    }
+
+    fn assign_function(&mut self, token_list: &TokenList){
+        let function_name = SymbolName::FunctionName(token_list.get_token(1).get_word());
+
+        let func_token_list = token_list.get_slice(3, token_list.get_length());
+        Interpreter::parse_function(token_list);
+    }
+
+    fn parse_function(token_list: &TokenList) {
+        let arg_char = "x";
     }
 
     fn assign_variable(&mut self, token_list: &TokenList){

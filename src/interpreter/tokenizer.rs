@@ -183,4 +183,8 @@ impl TokenList {
     pub fn get_vec(&self) -> &Vec<Token> {
         return &self.tokens;
     }
+
+    pub fn get_length(&self) -> usize {
+        return self.tokens.len();
+    }
 }
