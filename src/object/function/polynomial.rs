@@ -2,14 +2,14 @@ use std::{cmp::max, ops};
 
 use crate::object::number::{integer::Integer, rational_number::RationalNumber};
 
-use super::{function::Function, monomial::Monomial};
+use super::{function::{Function, FunctionTrait}, monomial::Monomial};
 
 // 多項式関数
 struct Polynomial {
     coefficients: Vec<RationalNumber>,
 }
 
-impl Function for Polynomial {
+impl FunctionTrait for Polynomial {
     fn calc(&self, x: RationalNumber) -> RationalNumber {
         let mut ret_value = RationalNumber::from(0);
 

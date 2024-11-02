@@ -14,12 +14,12 @@ use crate::object::number::value::{self, Value};
 use crate::object::number::integer::Integer;
 use crate::object::vector::vector::NumericalVector;
 
-use crate::object::function::function::Function;
+use crate::object::function::function::{Function, FunctionTrait};
 use crate::object::function::monomial::Monomial;
 
 pub struct Interpreter {
     variables: HashMap<SymbolName, Value>,
-    functions: HashMap<SymbolName, Box<dyn Function>>,
+    functions: HashMap<SymbolName, Box<dyn FunctionTrait>>,
     output: String,
 }
 
@@ -285,7 +285,7 @@ impl Interpreter {
 mod tests {
     use super::super::symbol::SymbolName;
     use super::Interpreter;
-    use crate::object::function::function::Function;
+    use crate::object::function::function::FunctionTrait;
     use crate::object::function::monomial::Monomial;
     use crate::object::number::integer::Integer;
     use crate::object::number::rational_number::RationalNumber;

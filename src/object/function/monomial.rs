@@ -2,7 +2,7 @@ use core::fmt;
 
 use crate::object::number::{integer::Integer, rational_number::RationalNumber};
 
-use super::function::Function;
+use super::function::{Function, FunctionTrait};
 
 #[derive(Clone)]
 pub struct Monomial {
@@ -19,7 +19,7 @@ impl Monomial {
     }
 }
 
-impl Function for Monomial {
+impl FunctionTrait for Monomial {
     fn calc(&self, x: RationalNumber) -> RationalNumber {
         let mut ret_value = self.coefficient;
 
@@ -55,7 +55,7 @@ impl fmt::Display for Monomial {
 mod tests {
     use crate::object::number::{integer::Integer, rational_number::RationalNumber};
 
-    use super::Function;
+    use super::FunctionTrait;
     use super::Monomial;
 
     #[test]
