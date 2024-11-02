@@ -9,6 +9,7 @@ pub enum Token {
     Eval,
     Vec,
     Func,
+    Calc,
     // 記号
     Eq,
     Plus,
@@ -37,6 +38,9 @@ impl Token {
         }
         if word == "func" {
             return Token::Func;
+        }
+        if word == "calc" {
+            return Token::Calc;
         }
 
         // 記号
@@ -86,6 +90,9 @@ impl Token {
             }
             Token::Func => {
                 return String::from("vec");
+            }
+            Token::Calc => {
+                return String::from("calc");
             }
             // 記号
             Token::Eq => {

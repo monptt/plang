@@ -9,7 +9,7 @@ use crate::object::number::operation::Div;
 use crate::object::number::operation::Mul;
 use crate::object::number::operation::Sub;
 use crate::object::number::rational_number::RationalNumber;
-use crate::object::number::value::Value;
+use crate::object::number::value::{self, Value};
 
 use crate::object::number::integer::Integer;
 use crate::object::vector::vector::NumericalVector;
@@ -20,7 +20,7 @@ use crate::object::function::monomial::Monomial;
 pub struct Interpreter {
     variables: HashMap<SymbolName, Value>,
     functions: HashMap<SymbolName, Box<dyn Function>>,
-    output: String
+    output: String,
 }
 
 impl Interpreter {
@@ -28,7 +28,7 @@ impl Interpreter {
         return Interpreter {
             variables: HashMap::new(),
             functions: HashMap::new(),
-            output: String::from("")
+            output: String::from(""),
         };
     }
 
@@ -39,9 +39,7 @@ impl Interpreter {
 
             let first_token = token_list.get_token(0);
 
-            if *first_token == Token::Let
-                && *token_list.get_token(2) == Token::Eq
-            {
+            if *first_token == Token::Let && *token_list.get_token(2) == Token::Eq {
                 // 変数宣言
                 self.assign_variable(&token_list);
             } else if *first_token == Token::Eval {
@@ -56,11 +54,18 @@ impl Interpreter {
                 self.output.push_str(&String::from(format!("={}", value)));
             } else if *first_token == Token::Vec && *token_list.get_token(2) == Token::Eq {
                 self.parse_vector(&token_list);
-            }else if *first_token == Token::Func && *token_list.get_token(2) == Token::Eq {
-                // 関数宣言
+            } else if *first_token == Token::Func && *token_list.get_token(2) == Token::Eq {
+                // 関数を定義
                 self.assign_function(&token_list);
-            }
-             else {
+            } else if *first_token == Token::Calc {
+                // 関数の値を計算
+                let func_name = SymbolName::FunctionName(token_list.get_token(1).get_word());
+                let func = self.functions.get(&func_name).unwrap();
+                let arg = Interpreter::eval_number(&token_list.get_token(3).get_word());
+                let result = func.calc(arg);
+                // 出力
+                self.output.push_str(&String::from(format!("{} ( {} ) = {}", func_name, arg, result)));
+            } else {
                 // 何も当てはまらない場合はとりあえずそのまま出す
                 self.output.push_str(line);
             }
@@ -70,16 +75,18 @@ impl Interpreter {
         return self.output.clone();
     }
 
-    fn assign_function(&mut self, token_list: &TokenList){
+    fn assign_function(&mut self, token_list: &TokenList) {
         let function_name = SymbolName::FunctionName(token_list.get_token(1).get_word());
 
         let func_token_list = token_list.get_slice(3, token_list.get_length());
-        
+
         let func = self.parse_function(&func_token_list);
-        self.functions.insert(function_name.clone(), Box::new(func.clone()));
+        self.functions
+            .insert(function_name.clone(), Box::new(func.clone()));
 
         // 出力
-        self.output.push_str(&String::from(format!("{}={}", function_name, func)));
+        self.output
+            .push_str(&String::from(format!("{}={}", function_name, func)));
     }
 
     fn parse_function(&self, token_list: &TokenList) -> Monomial {
@@ -106,25 +113,29 @@ impl Interpreter {
             // +,-を処理
             if *token == Token::Plus {
                 let lhs = self.parse_function(&token_list.get_slice(0, i));
-                let rhs = self.parse_function(&token_list.get_slice(i+1, token_list.get_length()));
+                let rhs =
+                    self.parse_function(&token_list.get_slice(i + 1, token_list.get_length()));
                 return lhs; // + rhs; //todo: 実装
             } else if *token == Token::Minus {
                 let lhs = self.parse_function(&token_list.get_slice(0, i));
-                let rhs = self.parse_function(&token_list.get_slice(i+1, token_list.get_length()));
+                let rhs =
+                    self.parse_function(&token_list.get_slice(i + 1, token_list.get_length()));
                 return lhs; // - rhs; //todo: 実装
             }
         }
         return Monomial::new(RationalNumber::from(1), Integer::from(0));
     }
 
-    fn assign_variable(&mut self, token_list: &TokenList){
+    fn assign_variable(&mut self, token_list: &TokenList) {
         let variable_name = SymbolName::VariableName(token_list.get_token(1).get_word());
         let variable_value = Value::Number(self.evaluate(&token_list.get_vec()[3..].to_vec()));
 
-        self.variables.insert(variable_name.clone(), variable_value.clone());
+        self.variables
+            .insert(variable_name.clone(), variable_value.clone());
 
         // 出力
-        self.output.push_str(&String::from(format!("{}=", variable_name)));
+        self.output
+            .push_str(&String::from(format!("{}=", variable_name)));
         for token in token_list.get_vec()[3..].to_vec() {
             self.output.push_str(&String::from(format!("{}", token)));
         }
@@ -139,7 +150,10 @@ impl Interpreter {
 
         if n == 1 {
             let token = &tokens[0];
-            if self.variables.contains_key(&SymbolName::VariableName(token.get_word())) {
+            if self
+                .variables
+                .contains_key(&SymbolName::VariableName(token.get_word()))
+            {
                 // 変数の場合
                 return self.eval_variable(&SymbolName::VariableName(token.get_word()));
             } else {
@@ -231,22 +245,26 @@ impl Interpreter {
 
     fn parse_vector(&mut self, token_list: &TokenList) {
         // ベクトルを宣言する
-        let name = SymbolName::VariableName(token_list.get_token(1).get_word()) ;
+        let name = SymbolName::VariableName(token_list.get_token(1).get_word());
 
         // ベクトルをパース
         let mut temp_vec: Vec<RationalNumber> = Vec::new();
         let mut dim = 0;
         let mut start_idx = 4;
-        for i in 4..token_list.get_vec().len()-1 {
+        for i in 4..token_list.get_vec().len() - 1 {
             if *token_list.get_token(i) == Token::Comma {
                 let value = self.evaluate(token_list.get_slice(start_idx, i).get_vec());
-                
+
                 temp_vec.push(value);
                 dim += 1;
                 start_idx = i + 1;
             }
         }
-        let value = self.evaluate(token_list.get_slice(start_idx, token_list.get_vec().len()-1).get_vec());
+        let value = self.evaluate(
+            token_list
+                .get_slice(start_idx, token_list.get_vec().len() - 1)
+                .get_vec(),
+        );
         dim += 1;
         temp_vec.push(value);
 
@@ -255,20 +273,22 @@ impl Interpreter {
         for i in 0..dim {
             vec.set_value(i, temp_vec[i]);
         }
-        self.variables.insert(name.clone(), Value::Vector(vec.clone()));
+        self.variables
+            .insert(name.clone(), Value::Vector(vec.clone()));
 
-        self.output.push_str(&String::from(format!("{}={}", name, vec)));
+        self.output
+            .push_str(&String::from(format!("{}={}", name, vec)));
     }
 }
 
 #[cfg(test)]
-mod tests{
+mod tests {
+    use super::super::symbol::SymbolName;
+    use super::Interpreter;
     use crate::object::function::function::Function;
     use crate::object::function::monomial::Monomial;
     use crate::object::number::integer::Integer;
     use crate::object::number::rational_number::RationalNumber;
-    use super::Interpreter;
-    use super::super::symbol::SymbolName;
 
     #[test]
     fn test_variable_assign() {
@@ -284,8 +304,11 @@ mod tests{
     fn test_function_assign() {
         let mut interpreter = Interpreter::new();
         interpreter.interpret("func f = x");
-        
-        let func = interpreter.functions.get(&SymbolName::FunctionName(String::from("f"))).unwrap();
+
+        let func = interpreter
+            .functions
+            .get(&SymbolName::FunctionName(String::from("f")))
+            .unwrap();
         let expected_func = Monomial::new(RationalNumber::from(1), Integer::from(1));
 
         let arg = RationalNumber::from(3);
