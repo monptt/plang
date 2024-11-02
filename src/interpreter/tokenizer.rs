@@ -15,6 +15,7 @@ pub enum Token {
     Minus,
     Mul,
     Div,
+    Pow,
     BracketLeft,
     BracketRight,
     Comma,
@@ -53,6 +54,9 @@ impl Token {
         }
         if word == "/" {
             return Token::Div;
+        }
+        if word == "^" {
+            return Token::Pow;
         }
         if word == "(" {
             return Token::BracketLeft;
@@ -99,6 +103,9 @@ impl Token {
             Token::Div => {
                 return String::from("/");
             }
+            Token::Pow => {
+                return String::from("^");
+            }
             Token::BracketLeft => {
                 return String::from("(");
             }
@@ -136,7 +143,7 @@ impl TokenList {
         for word in words {
             let mut temp_token = String::from("");
             for c in word.chars() {
-                if "=+-*/()[],".contains(c) {
+                if "=+-*/^()[],".contains(c) {
                     // 記号が来たらその時点でトークン化
                     if temp_token.len() > 0 {
                         let token = Token::new(&temp_token);
