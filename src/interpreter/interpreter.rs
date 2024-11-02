@@ -1,3 +1,4 @@
+use super::tokenizer::TokenList;
 use super::tokenizer::{self, Token};
 
 use std::collections::HashMap;
@@ -15,21 +16,21 @@ use crate::object::vector::vector::NumericalVector;
 
 pub struct Interpreter {
     variables: HashMap<String, Value>,
+    output: String
 }
 
 impl Interpreter {
     pub fn new() -> Interpreter {
         return Interpreter {
             variables: HashMap::new(),
+            output: String::from("")
         };
     }
 
     pub fn interpret(&mut self, code: &str) -> String {
-        let mut output = String::from("");
-
         for line in code.lines() {
             // ここで行ごとに処理する
-            let token_list = Box::new(tokenizer::TokenList::new(&line.to_string()));
+            let token_list = tokenizer::TokenList::new(&line.to_string());
 
             if *token_list.get_token(0) == Token::Let
                 && *token_list.get_token(2) == Token::Eq
@@ -43,56 +44,28 @@ impl Interpreter {
                 self.variables
                     .insert(variable_name.to_string(), variable_value);
 
-                output.push_str(&String::from(format!("{}=", variable_name)));
+                self.output.push_str(&String::from(format!("{}=", variable_name)));
                 for token in token_list.get_vec()[3..].to_vec() {
-                    output.push_str(&String::from(format!("{}", token)));
+                    self.output.push_str(&String::from(format!("{}", token)));
                 }
             } else if *token_list.get_token(0) == Token::Eval {
                 // 値を評価する
                 let value: &RationalNumber = &self.evaluate(&token_list.get_vec()[1..].to_vec());
 
                 for token in token_list.get_vec()[1..].to_vec() {
-                    output.push_str(&String::from(format!("{}", token)));
+                    self.output.push_str(&String::from(format!("{}", token)));
                 }
-                output.push_str(&String::from(format!("={}", value)));
+                self.output.push_str(&String::from(format!("={}", value)));
             } else if *token_list.get_token(0) == Token::Vec {
-                // ベクトルを宣言する
-                let name = token_list.get_token(1).get_word();
-
-                // ベクトルをパース
-                let mut temp_vec: Vec<RationalNumber> = Vec::new();
-                let mut dim = 0;
-                let mut start_idx = 4;
-                for i in 4..token_list.get_vec().len()-1 {
-                    if *token_list.get_token(i) == Token::Comma {
-                        let value = self.evaluate(token_list.get_slice(start_idx, i).get_vec());
-                        
-                        temp_vec.push(value);
-                        dim += 1;
-                        start_idx = i + 1;
-                    }
-                }
-                let value = self.evaluate(token_list.get_slice(start_idx, token_list.get_vec().len()-1).get_vec());
-                dim += 1;
-                temp_vec.push(value);
-
-                // 変数リストに入れる
-                let mut vec = NumericalVector::new(dim);
-                for i in 0..dim {
-                    vec.set_value(i, temp_vec[i]);
-                }
-                self.variables.insert(name.clone(), Value::Vector(vec.clone()));
-
-                output.push_str(&String::from(format!("{}={}", name, vec)));
-
+                self.parse_vector(&token_list);
             } else {
                 // 何も当てはまらない場合はとりあえずそのまま出す
-                output.push_str(line);
+                self.output.push_str(line);
             }
 
-            output.push_str("\n");
+            self.output.push_str("\n");
         }
-        return output;
+        return self.output.clone();
     }
 
     fn evaluate(&self, tokens: &Vec<Token>) -> RationalNumber {
@@ -192,5 +165,36 @@ impl Interpreter {
 
     fn eval_number(in_str: &String) -> RationalNumber {
         return RationalNumber::from(in_str);
+    }
+
+    fn parse_vector(&mut self, token_list: &TokenList) {
+        // ベクトルを宣言する
+        let name = token_list.get_token(1).get_word();
+
+        // ベクトルをパース
+        let mut temp_vec: Vec<RationalNumber> = Vec::new();
+        let mut dim = 0;
+        let mut start_idx = 4;
+        for i in 4..token_list.get_vec().len()-1 {
+            if *token_list.get_token(i) == Token::Comma {
+                let value = self.evaluate(token_list.get_slice(start_idx, i).get_vec());
+                
+                temp_vec.push(value);
+                dim += 1;
+                start_idx = i + 1;
+            }
+        }
+        let value = self.evaluate(token_list.get_slice(start_idx, token_list.get_vec().len()-1).get_vec());
+        dim += 1;
+        temp_vec.push(value);
+
+        // 変数リストに入れる
+        let mut vec = NumericalVector::new(dim);
+        for i in 0..dim {
+            vec.set_value(i, temp_vec[i]);
+        }
+        self.variables.insert(name.clone(), Value::Vector(vec.clone()));
+
+        self.output.push_str(&String::from(format!("{}={}", name, vec)));
     }
 }
