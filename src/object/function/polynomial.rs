@@ -1,3 +1,5 @@
+use std::{cmp::max, ops};
+
 use crate::object::number::{integer::Integer, rational_number::RationalNumber};
 
 use super::{function::Function, monomial::Monomial};
@@ -28,6 +30,10 @@ impl Polynomial {
             coefficients: coefficients,
         };
     }
+
+    fn get_degree(&self) -> Integer {
+        return Integer::from(self.coefficients.len() as i32);
+    }
 }
 
 impl From<&Monomial> for Polynomial {
@@ -42,5 +48,25 @@ impl From<&Monomial> for Polynomial {
         }
 
         return Polynomial::new(coefficients);
+    }
+}
+
+impl ops::Add for Polynomial {
+    type Output = Polynomial;
+    fn add(self, rhs: Self) -> Polynomial {
+        let degree = max(self.get_degree().value, rhs.get_degree().value);
+        let mut ret_coefficients: Vec<RationalNumber> = Vec::new();
+        for i in 0..degree {
+            let mut coefficitent = RationalNumber::from(0);
+            if i < self.get_degree().value {
+                coefficitent = coefficitent + self.coefficients[i as usize];
+            }
+            if i < rhs.get_degree().value {
+                coefficitent = coefficitent + rhs.coefficients[i as usize];
+            }
+            ret_coefficients.push(coefficitent);
+        }
+
+        return Polynomial::new(ret_coefficients);
     }
 }
