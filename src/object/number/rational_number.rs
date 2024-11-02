@@ -1,6 +1,7 @@
 use super::integer::Integer;
 use super::value::AsValue;
 
+use core::num;
 use std::cmp;
 use std::ops;
 use std::result;
@@ -22,17 +23,26 @@ pub struct RationalNumber {
 
 impl RationalNumber {
     fn new(a: Integer, b: Integer) -> RationalNumber {
-        return RationalNumber {
+        let num = RationalNumber {
             numerator: a,
             denominator: b,
         };
+        return RationalNumber::reduce(&num);
     }
 
     fn reduce(x: &RationalNumber) -> RationalNumber {
         let gcd = Integer::gcd(x.numerator, x.denominator);
+        let mut numerator = x.numerator / gcd;
+        let mut denominator =  x.denominator / gcd;
+        
+        if denominator.value < 0 {
+            numerator = numerator * Integer::from(-1);
+            denominator = denominator * Integer::from(-1);
+        }
+
         return RationalNumber {
-            numerator: x.numerator / gcd,
-            denominator: x.denominator / gcd,
+            numerator: numerator,
+            denominator: denominator,
         };
     }
 
@@ -189,13 +199,23 @@ mod tests {
 impl fmt::Display for RationalNumber {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         if self.denominator.value == 1 {
+            // 整数の場合
             return write!(f, "{}", self.numerator);
         } else {
-            return write!(
-                f,
-                "\\frac{{ {} }}{{ {} }}",
-                self.numerator, self.denominator
-            );
+            if self.numerator.value >= 0 {
+                return write!(
+                    f,
+                    "\\frac{{ {} }}{{ {} }}",
+                    self.numerator, self.denominator
+                );
+            } else {
+                return write!(
+                    f,
+                    "- \\frac{{ {} }}{{ {} }}",
+                    Integer::abs(self.numerator), self.denominator
+                );
+            }
+
         }
     }
 }
