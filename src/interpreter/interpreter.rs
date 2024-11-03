@@ -86,7 +86,7 @@ impl Interpreter {
 
         // 出力
         self.output
-            .push_str(&String::from(format!("{}={}", function_name, func)));
+            .push_str(&String::from(format!("{} : x \\mapsto {}", function_name, func)));
     }
 
     fn parse_function(&self, token_list: &TokenList) -> Function {
