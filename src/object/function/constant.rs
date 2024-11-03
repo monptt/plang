@@ -6,7 +6,7 @@ use super::function::FunctionTrait;
 
 #[derive(Clone)]
 pub struct Constant{
-    value: RationalNumber
+    pub value: RationalNumber
 }
 
 impl Constant {

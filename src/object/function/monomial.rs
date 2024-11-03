@@ -2,7 +2,7 @@ use core::fmt;
 
 use crate::object::number::{integer::Integer, rational_number::RationalNumber};
 
-use super::function::{Function, FunctionTrait};
+use super::{constant::Constant, function::{Function, FunctionTrait}};
 
 #[derive(Clone)]
 pub struct Monomial {
@@ -48,6 +48,12 @@ impl fmt::Display for Monomial {
                 return write!(f, "{} x ^ {{ {} }}", self.coefficient, self.degree);
             }
         }
+    }
+}
+
+impl From<&Constant> for Monomial {
+    fn from(constant: &Constant) -> Self {
+        return Monomial::new(constant.value, Integer::from(0));
     }
 }
 
