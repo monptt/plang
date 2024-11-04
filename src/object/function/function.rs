@@ -13,19 +13,25 @@ pub enum Function {
     Polynomial(Polynomial),
 }
 
-impl FunctionTrait for Function {
-    fn calc(&self, x: RationalNumber) -> RationalNumber {
+impl Function {
+    fn get_func(&self) -> Box<dyn FunctionTrait> {
         match self {
             Function::Constant(func) => {
-                return func.calc(x);
+                return Box::new(func.clone());
             }
             Function::Monomial(func) => {
-                return func.calc(x);
+                return Box::new(func.clone());
             }
             Function::Polynomial(func) => {
-                return func.calc(x);
+                return Box::new(func.clone());
             }
         }
+    }
+}
+
+impl FunctionTrait for Function {
+    fn calc(&self, x: RationalNumber) -> RationalNumber {
+        return self.get_func().calc(x);
     }
 }
 
